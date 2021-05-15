@@ -46,7 +46,7 @@ Widget languageItem(
                 model.language,
               ),
             ),
-            if (AppCubit.get(context).selectedLanguage[index])
+            if (AppCubit.get(context).selectedLanguage[index] == true)
               Icon(
                 IconBroken.Arrow___Right_Circle,
               ),

@@ -32,7 +32,7 @@ class Data {
   Null nextPageUrl;
   String path;
   int perPage;
-  Null prevPageUrl;
+  dynamic prevPageUrl;
   int to;
   int total;
 

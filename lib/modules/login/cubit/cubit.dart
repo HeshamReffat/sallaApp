@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla/models/user/user_model.dart';
 import 'package:salla/modules/login/cubit/states.dart';
+import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/network/repository.dart';
 
 class LoginCubit extends Cubit<LoginStates>
@@ -15,7 +16,12 @@ class LoginCubit extends Cubit<LoginStates>
   static LoginCubit get(context) => BlocProvider.of(context);
 
   UserModel userModel;
+  bool isPassword = true;
 
+  showPassword(){
+    isPassword = !isPassword;
+    emit(ShowPasswordState());
+  }
   userLogin({
     @required String email,
     @required String password,
@@ -34,6 +40,7 @@ class LoginCubit extends Cubit<LoginStates>
       if(userModel.status)
       {
         emit(LoginSuccessState(userModel));
+        setUserInfo(jsonEncode(userModel.data));
       } else
       {
         emit(LoginErrorState(userModel.message));

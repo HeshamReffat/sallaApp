@@ -9,3 +9,6 @@ const ADD_CART = 'carts';
 const GET_CATEGORIES = 'categories';
 
 const GET_PRODUCTS = 'products';
+
+const LOGOUT = 'logout';
+const SEARCH = 'products/search';

@@ -5,6 +5,7 @@ abstract class LoginStates {}
 class LoginInitialState extends LoginStates {}
 
 class LoginLoadingState extends LoginStates {}
+class ShowPasswordState extends LoginStates {}
 
 class LoginSuccessState extends LoginStates
 {

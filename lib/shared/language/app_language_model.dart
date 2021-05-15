@@ -28,6 +28,11 @@ class AppLanguageModel
   String see;
   String total;
   String proceed;
+  String english;
+  String arabic;
+  String darkMode;
+  String language;
+  String logout;
 
   AppLanguageModel({
     this.title1,
@@ -58,6 +63,11 @@ class AppLanguageModel
     this.see,
     this.total,
     this.proceed,
+    this.english,
+    this.arabic,
+    this.darkMode,
+    this.language,
+    this.logout
   });
 
   AppLanguageModel.fromJson(Map<String, dynamic> json)
@@ -90,6 +100,11 @@ class AppLanguageModel
     see = json['see'];
     total = json['total'];
     proceed = json['proceed'];
+    english = json['english'];
+    arabic = json['arabic'];
+    darkMode = json['darkMode'];
+    language = json['language'];
+    logout = json['logout'];
   }
 
   /*Map<String, dynamic> toJson() {

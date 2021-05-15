@@ -1,33 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salla/modules/login/login_screen.dart';
+import 'package:salla/modules/settings/cubit/cubit.dart';
+import 'package:salla/modules/settings/cubit/states.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
+import 'package:salla/shared/app_cubit/states.dart';
 import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
+import 'package:salla/shared/styles/icon_broken.dart';
+import 'package:salla/shared/styles/styles.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: ()
-      {
-        setAppLanguageToShared('en')
-            .then((value)
-        {
-          getTranslationFile('en').then((value)
-          {
-            AppCubit.get(context).setLanguage(
-              translationFile: value,
-              code: 'en',
-            ).then((value)
-            {
+    return BlocConsumer<SettingsScreenCubit, SettingsScreenStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return state is LoadingSettingsState
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 80,
+                      backgroundImage:
+                          SettingsScreenCubit.get(context).userData != null
+                              ? NetworkImage(
+                                  SettingsScreenCubit.get(context)
+                                      .userData
+                                      .image,
+                                )
+                              : AssetImage('assets/images/logo.jpg'),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      SettingsScreenCubit.get(context).userData.name,
+                      style: black18bold(),
+                    ),
+                    Divider(
+                      height: 10,
+                      color: Colors.grey,
+                    ),
+                    BlocConsumer<AppCubit, AppStates>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        return Column(
+                          children: [
+                            Theme(
+                              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                              child: ExpansionTile(
+                                leading: Icon(IconBroken.Paper),
+                                title: Text(appLang(context).language),
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setAppLanguageToShared('ar').then((value) {
+                                        getTranslationFile('ar').then((value) {
+                                          AppCubit.get(context)
+                                              .setLanguage(
+                                                translationFile: value,
+                                                code: 'ar',
+                                              )
+                                              .then((value) {
+                                            AppCubit.get(context).getHomeData();
+                                            AppCubit.get(context).getCart();
+                                            AppCubit.get(context).getCategories();
+                                          });
+                                        }).catchError((error) {});
+                                      }).catchError((error) {});
+                                    },
+                                    child: ListTile(
+                                      leading: Icon(IconBroken.Paper),
+                                      title: Text(appLang(context).arabic),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setAppLanguageToShared('en').then((value) {
+                                        getTranslationFile('en').then((value) {
+                                          AppCubit.get(context)
+                                              .setLanguage(
+                                                translationFile: value,
+                                                code: 'en',
+                                              )
+                                              .then((value) {
+                                                AppCubit.get(context).getHomeData();
+                                                AppCubit.get(context).getCart();
+                                                AppCubit.get(context).getCategories();
+                                          });
+                                        }).catchError((error) {});
+                                      }).catchError((error) {});
+                                    },
+                                    child: ListTile(
+                                      leading: Icon(IconBroken.Paper),
+                                      title: Text(appLang(context).english),
+                                    ),
+                                  ),
+                                ],
 
-            });
-          }).catchError((error) {});
-        })
-            .catchError((error) {});
+                              ),
+                            ),
+                            Divider(
+                              height: 10,
+                              color: Colors.grey,
+                            ),
+                            ListTile(
+                              leading: Icon(IconBroken.Setting),
+                              title: Text(appLang(context).darkMode),
+                              trailing: Switch(
+                                value: AppCubit.get(context).isDark,
+                                onChanged: (val) {
+                                  AppCubit.get(context).changeAppTheme(val);
+                                },
+                              ),
+                            ),
+                            Divider(
+                              height: 10,
+                              color: Colors.grey,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                SettingsScreenCubit.get(context).userLogout().then(
+                                      (value) {
+                                    navigateAndFinish(context, LoginScreen());
+                                  },
+                                );
+                              },
+                              child: ListTile(
+                                leading: Icon(IconBroken.Logout),
+                                title: Text(appLang(context).logout),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
       },
-      child: Text(
-        'change',
-      ),
     );
   }
 }

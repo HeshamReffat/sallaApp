@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla/modules/login/login_screen.dart';
 import 'package:salla/modules/select_language/select_language_screen.dart';
+import 'package:salla/modules/settings/cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
 import 'package:salla/shared/components/constants.dart';
@@ -11,8 +12,7 @@ import 'package:salla/shared/network/remote/dio_helper.dart';
 
 import 'layout/home_layout.dart';
 
-void main() async
-{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await init();
@@ -25,16 +25,13 @@ void main() async
 
   Widget start;
 
-  if(appLanguage != null && userToken != null)
-  {
+  if (appLanguage != null && userToken != null) {
     start = HomeLayout();
-  } else if(appLanguage != null && userToken == null)
-  {
+  } else if (appLanguage != null && userToken == null) {
     start = LoginScreen();
-  } else
-    {
-      start = SelectLanguageScreen();
-    }
+  } else {
+    start = SelectLanguageScreen();
+  }
 
   runApp(MyApp(
     translationFile: translation,
@@ -43,8 +40,7 @@ void main() async
   ));
 }
 
-class MyApp extends StatelessWidget
-{
+class MyApp extends StatelessWidget {
   final String translationFile;
   final String code;
   final Widget start;
@@ -56,23 +52,35 @@ class MyApp extends StatelessWidget
   });
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => di<AppCubit>()..setLanguage(
-            translationFile: translationFile,
-            code: code,
-          )..getHomeData()..getCategories()..getCart(),
+          create: (context) => di<AppCubit>()
+            ..setLanguage(
+              translationFile: translationFile,
+              code: code,
+            )
+            ..getHomeData()
+            ..getCategories()
+            ..getCart()
+            ..startAppTheme(),
         ),
+        BlocProvider(create: (context) => di<SettingsScreenCubit>()..getUser()),
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
-        builder: (context, state)
-        {
+        builder: (context, state) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            darkTheme: AppCubit.get(context).isDark
+                ? ThemeData(
+                    brightness: Brightness.dark,
+                    floatingActionButtonTheme: FloatingActionButtonThemeData(
+                        backgroundColor: Colors.blue))
+                : ThemeData(brightness: Brightness.light),
+            themeMode:
+                AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
               fontFamily: 'Jannah',
               primarySwatch: Colors.blue,

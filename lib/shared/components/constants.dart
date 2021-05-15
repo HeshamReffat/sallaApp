@@ -14,12 +14,26 @@ Future<String> getAppLanguage() async
 {
   return await di<CacheHelper>().get('appLang');
 }
-
+Future<bool> setUserInfo(data) async
+{
+  return await di<CacheHelper>().put('userInfo',data);
+}
+Future<String> getUserInfo() async
+{
+  return await di<CacheHelper>().get('userInfo');
+}
 Future<String> getUserToken() async
 {
   return await di<CacheHelper>().get('userToken');
 }
-
+Future<bool> setAppTheme(bool dark) async
+{
+  return await di<CacheHelper>().put('appTheme',dark);
+}
+Future<bool> getAppTheme() async
+{
+  return await di<CacheHelper>().get('appTheme');
+}
 Future<bool> setAppLanguageToShared(String code) async
 {
   appLanguage = code;

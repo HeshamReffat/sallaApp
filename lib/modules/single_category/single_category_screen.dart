@@ -73,7 +73,7 @@ class SingleCategoryScreen extends StatelessWidget
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(
-            height: 130.0,
+            height: 140.0,
             child: Row(
               children: [
                 Container(
@@ -197,7 +197,7 @@ class SingleCategoryScreen extends StatelessWidget
                                     id: model.id,
                                   );
                                 },
-                                heroTag : '2',
+                                heroTag : null,
                                 backgroundColor:
                                 AppCubit.get(context).favourites[model.id]
                                     ? Colors.green
@@ -213,7 +213,7 @@ class SingleCategoryScreen extends StatelessWidget
                                     id: model.id,
                                   );
                                 },
-                                heroTag : '1',
+                                heroTag : null,
                                 backgroundColor: AppCubit.get(context).cart[model.id]
                                     ? Colors.green
                                     : null,

@@ -7,6 +7,7 @@ import 'package:salla/models/add_fav/add_fav_model.dart';
 import 'package:salla/models/cart/cart.dart';
 import 'package:salla/models/categories/categories.dart';
 import 'package:salla/models/home/home_model.dart';
+import 'package:salla/models/search/search_model.dart';
 import 'package:salla/modules/cart/cart_screen.dart';
 import 'package:salla/modules/categories/categories_screen.dart';
 import 'package:salla/modules/home/home_screen.dart';
@@ -16,16 +17,14 @@ import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/language/app_language_model.dart';
 import 'package:salla/shared/network/repository.dart';
 
-class AppCubit extends Cubit<AppStates>
-{
+class AppCubit extends Cubit<AppStates> {
   final Repository repository;
 
   AppCubit(this.repository) : super(AppInitialState());
 
   static AppCubit get(context) => BlocProvider.of(context);
 
-  List<bool> selectedLanguage =
-  [
+  List<bool> selectedLanguage = [
     false,
     false,
   ];
@@ -77,6 +76,19 @@ class AppCubit extends Cubit<AppStates>
   Map<int, bool> favourites = {};
   Map<int, bool> cart = {};
   int cartProductsNumber = 0;
+SearchModel searchModel;
+  Future<void> searchProduct(productName,context)async {
+    emit(AppSearchLoadingState());
+    repository.searchProduct(token: userToken, productName: productName).then(
+      (value) {
+        print(value.data);
+        searchModel = SearchModel.fromJson(value.data);
+        emit(AppSearchState());
+      },
+    ).catchError((error) {
+      print(error.toString());
+    });
+  }
 
   getHomeData() {
     emit(AppLoadingState());
@@ -87,18 +99,11 @@ class AppCubit extends Cubit<AppStates>
     )
         .then((value) {
       homeModel = HomeModel.fromJson(value.data);
+      homeModel.data.products.forEach((element) {
+        favourites.addAll({element.id: element.inFavorites});
+        cart.addAll({element.id: element.inCart});
 
-      homeModel.data.products.forEach((element)
-      {
-        favourites.addAll({
-          element.id: element.inFavorites
-        });
-        cart.addAll({
-          element.id: element.inCart
-        });
-
-        if(element.inCart)
-        {
+        if (element.inCart) {
           cartProductsNumber++;
         }
       });
@@ -114,12 +119,8 @@ class AppCubit extends Cubit<AppStates>
 
   CategoriesModel categoriesModel;
 
-  getCategories()
-  {
-    repository
-        .getCategories()
-        .then((value)
-    {
+  getCategories() {
+    repository.getCategories().then((value) {
       categoriesModel = CategoriesModel.fromJson(value.data);
 
       emit(AppCategoriesSuccessState());
@@ -133,14 +134,10 @@ class AppCubit extends Cubit<AppStates>
 
   CartModel cartModel;
 
-  getCart()
-  {
+  getCart() {
     emit(AppUpdateCartLoadingState());
 
-    repository
-        .getCartData(token: userToken)
-        .then((value)
-    {
+    repository.getCartData(token: userToken).then((value) {
       cartModel = CartModel.fromJson(value.data);
 
       emit(AppCartSuccessState());
@@ -168,19 +165,16 @@ class AppCubit extends Cubit<AppStates>
       token: userToken,
       id: id,
     )
-        .then((value)
-    {
+        .then((value) {
       print(value.data);
       addFavModel = AddFavModel.fromJson(value.data);
 
-      if(addFavModel.status == false)
-      {
+      if (addFavModel.status == false) {
         favourites[id] = !favourites[id];
       }
 
       emit(AppChangeFavSuccessState());
-    }).catchError((error)
-    {
+    }).catchError((error) {
       favourites[id] = !favourites[id];
       emit(AppChangeFavErrorState(error.toString()));
     });
@@ -202,24 +196,36 @@ class AppCubit extends Cubit<AppStates>
       token: userToken,
       id: id,
     )
-        .then((value)
-    {
+        .then((value) {
       print(value.data);
       addCartModel = AddCartModel.fromJson(value.data);
 
-      if(addCartModel.status == false)
-      {
+      if (addCartModel.status == false) {
         changeLocalCart(id);
       }
 
       emit(AppChangeCartSuccessState());
 
       getCart();
-    }).catchError((error)
-    {
+    }).catchError((error) {
       changeLocalCart(id);
 
       emit(AppChangeCartErrorState(error.toString()));
+    });
+  }
+
+  bool isDark = false;
+
+  changeAppTheme(value) {
+    isDark = value;
+    setAppTheme(value);
+    emit(AppSetAppThemeState());
+  }
+
+  startAppTheme() {
+    getAppTheme().then((value) {
+      isDark = value;
+      emit(AppSetAppThemeState());
     });
   }
 
@@ -235,26 +241,21 @@ class AppCubit extends Cubit<AppStates>
       id: id,
       quantity: quantity,
     )
-        .then((value)
-    {
+        .then((value) {
       print(value.data);
 
       getCart();
-    }).catchError((error)
-    {
+    }).catchError((error) {
       emit(AppUpdateCartErrorState(error.toString()));
     });
   }
 
-  void changeLocalCart(id)
-  {
+  void changeLocalCart(id) {
     cart[id] = !cart[id];
 
-    if(cart[id])
-    {
+    if (cart[id]) {
       cartProductsNumber++;
-    } else
-    {
+    } else {
       cartProductsNumber--;
     }
 

@@ -93,6 +93,7 @@ class LoginScreen extends StatelessWidget {
                             height: 10.0,
                           ),
                           TextFormField(
+                            obscureText: LoginCubit.get(context).isPassword,
                             controller: passwordController,
                             validator: (value) {
                               if (value.isEmpty) {
@@ -100,12 +101,18 @@ class LoginScreen extends StatelessWidget {
                               }
                               return null;
                             },
+
                             decoration: InputDecoration(
                               prefixIcon: Icon(
                                 IconBroken.Lock,
                               ),
-                              suffixIcon: Icon(
-                                IconBroken.Show,
+                              suffixIcon: InkWell(
+                                onTap: (){
+                                  LoginCubit.get(context).showPassword();
+                                },
+                                child:  LoginCubit.get(context).isPassword ? Icon(
+                                  IconBroken.Show,
+                                ) : Icon(IconBroken.Hide),
                               ),
                               labelText: appLang(context).password,
                               border: OutlineInputBorder(),

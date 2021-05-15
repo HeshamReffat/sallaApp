@@ -7,6 +7,8 @@ class AppInitialState extends AppStates {}
 class AppLoadingState extends AppStates {}
 
 class AppChangeFavLoadingState extends AppStates {}
+class AppSearchLoadingState extends AppStates {}
+class AppSearchState extends AppStates {}
 
 class AppChangeFavSuccessState extends AppStates {}
 
@@ -68,6 +70,8 @@ class AppChangeBottomIndexState extends AppStates {}
 class AppSetLanguageState extends AppStates {}
 
 class AppSetAppDirectionState extends AppStates {}
+class AppSetAppThemeState extends AppStates {}
+class AppGetUserState extends AppStates {}
 
 class AppSuccessState extends AppStates
 {

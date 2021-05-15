@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/network/end_points.dart';
 import 'package:salla/shared/network/errors.dart';
 import 'package:salla/shared/network/remote/dio_helper.dart';
@@ -12,6 +13,13 @@ abstract class Repository {
     @required String password,
   });
 
+  Future<Response> userLogout({
+    @required String token,
+  });
+  Future<Response> searchProduct({
+    @required String token,
+    @required String productName,
+  });
   Future<Response> getHomeData({
     @required String token,
   });
@@ -74,10 +82,9 @@ class RepoImplementation extends Repository {
   }) async {
     return await dioHelper.postData(
       url: LOGIN,
-      data:
-      {
-        'email':email,
-        'password':password,
+      data: {
+        'email': email,
+        'password': password,
       },
     );
   }
@@ -90,9 +97,8 @@ class RepoImplementation extends Repository {
     return await dioHelper.postData(
       url: ADD_FAVOURITE,
       token: token,
-      data:
-      {
-        'product_id':id,
+      data: {
+        'product_id': id,
       },
     );
   }
@@ -105,9 +111,8 @@ class RepoImplementation extends Repository {
     return await dioHelper.postData(
       url: ADD_CART,
       token: token,
-      data:
-      {
-        'product_id':id,
+      data: {
+        'product_id': id,
       },
     );
   }
@@ -121,9 +126,8 @@ class RepoImplementation extends Repository {
     return await dioHelper.putData(
       url: '$ADD_CART/$id',
       token: token,
-      data:
-      {
-        'quantity':quantity,
+      data: {
+        'quantity': quantity,
       },
     );
   }
@@ -131,8 +135,7 @@ class RepoImplementation extends Repository {
   @override
   Future<Response> getHomeData({
     String token,
-  }) async
-  {
+  }) async {
     return await dioHelper.getData(
       url: HOME_DATA,
       token: token,
@@ -142,8 +145,7 @@ class RepoImplementation extends Repository {
   @override
   Future<Response> getCartData({
     String token,
-  }) async
-  {
+  }) async {
     return await dioHelper.getData(
       url: ADD_CART,
       token: token,
@@ -154,23 +156,33 @@ class RepoImplementation extends Repository {
   Future<Response> getSingleCategory({
     String token,
     int id,
-  }) async
-  {
+  }) async {
     return await dioHelper.getData(
       url: GET_PRODUCTS,
       token: token,
       query: {
-        'category_id':id,
+        'category_id': id,
       },
     );
   }
 
   @override
-  Future<Response> getCategories() async
-  {
+  Future<Response> getCategories() async {
     return await dioHelper.getData(
       url: GET_CATEGORIES,
     );
+  }
+
+  @override
+  Future<Response> userLogout({String token}) async {
+    return await dioHelper.postData(
+        url: LOGOUT, token: token, data: {"fcm_token": "SomeFcmToken"});
+  }
+
+  @override
+  Future<Response> searchProduct({String token, String productName}) async{
+    return await dioHelper.postData(
+        url: SEARCH, token: token, data: {"text": "$productName"});
   }
 
 // @override

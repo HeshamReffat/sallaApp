@@ -176,7 +176,7 @@ class HomeScreen extends StatelessWidget {
     @required int index,
   }) =>
       Container(
-        color: Colors.white,
+        color: AppCubit.get(context).isDark ?Colors.black87:Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -187,12 +187,15 @@ class HomeScreen extends StatelessWidget {
               child: Stack(
                 alignment: AlignmentDirectional.bottomEnd,
                 children: [
-                  Image(
-                    image: NetworkImage(
-                      model.image,
+                  Center(
+                    child: Image(
+                      image: NetworkImage(
+                        model.image,
+                      ),
+                      //fit: BoxFit.cover,
+                      height: 250.0,
+                      width: 150,
                     ),
-                    //fit: BoxFit.cover,
-                    height: 250.0,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -206,7 +209,7 @@ class HomeScreen extends StatelessWidget {
                                 id: model.id,
                               );
                             },
-                            heroTag : '4',
+                            heroTag : null,
                             backgroundColor:
                                 AppCubit.get(context).favourites[model.id]
                                     ? Colors.green
@@ -222,7 +225,7 @@ class HomeScreen extends StatelessWidget {
                                 id: model.id,
                               );
                             },
-                            heroTag : '3',
+                            heroTag : null,
                             backgroundColor: AppCubit.get(context).cart[model.id]
                                 ? Colors.green
                                 : null,

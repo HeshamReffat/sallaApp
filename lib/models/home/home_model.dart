@@ -52,8 +52,8 @@ class Data {
 class Banners {
   int id;
   String image;
-  Null category;
-  Null product;
+  dynamic category;
+  dynamic product;
 
   Banners({this.id, this.image, this.category, this.product});
 
