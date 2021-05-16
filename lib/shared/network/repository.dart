@@ -28,6 +28,10 @@ abstract class Repository {
     @required String token,
   });
 
+  Future<Response> getFavorites({
+    @required String token,
+  });
+
   Future<Response> getSingleCategory({
     @required String token,
     @required int id,
@@ -138,6 +142,16 @@ class RepoImplementation extends Repository {
   }) async {
     return await dioHelper.getData(
       url: HOME_DATA,
+      token: token,
+    );
+  }
+
+  @override
+  Future<Response> getFavorites({
+    String token,
+  }) async {
+    return await dioHelper.getData(
+      url: FAVORITES,
       token: token,
     );
   }

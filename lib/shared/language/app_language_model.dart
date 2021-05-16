@@ -33,6 +33,7 @@ class AppLanguageModel
   String darkMode;
   String language;
   String logout;
+  String favorite;
 
   AppLanguageModel({
     this.title1,
@@ -67,7 +68,8 @@ class AppLanguageModel
     this.arabic,
     this.darkMode,
     this.language,
-    this.logout
+    this.logout,
+    this.favorite
   });
 
   AppLanguageModel.fromJson(Map<String, dynamic> json)
@@ -105,6 +107,7 @@ class AppLanguageModel
     darkMode = json['darkMode'];
     language = json['language'];
     logout = json['logout'];
+    favorite = json['favorite'];
   }
 
   /*Map<String, dynamic> toJson() {

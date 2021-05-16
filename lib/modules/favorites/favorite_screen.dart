@@ -1,32 +1,48 @@
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salla/models/search/search_model.dart';
+import 'package:salla/models/favourite/favorite_model.dart';
+import 'package:salla/modules/favorites/cubit/favorite_cubit.dart';
+import 'package:salla/modules/favorites/cubit/favorite_states.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
+import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/styles/colors.dart';
 import 'package:salla/shared/styles/icon_broken.dart';
 import 'package:salla/shared/styles/styles.dart';
 
-class SearchScreen extends StatelessWidget {
-  String title;
-
-  SearchScreen({this.title});
+class FavoriteScreen extends StatelessWidget {
+  const FavoriteScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
-      listener: (context,state){},
-      builder: (context,state){
+    return BlocConsumer<FavoriteCubit, FavoriteStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = FavoriteCubit.get(context).favModel;
         return Scaffold(
-          appBar: AppBar(title:Text(title,style: white20bold(),) ,centerTitle: true,),
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(appLang(context).favorite),
+          ),
           body: ConditionalBuilder(
-            condition: state is !AppSearchLoadingState,
-            builder: (context) => ListView.separated(
-                itemBuilder: (context, index) => searchItem(context: context,index: index,model: AppCubit.get(context).searchModel.mainData.data[index]),
-                separatorBuilder: (context,index)=>Divider(),
-                itemCount: AppCubit.get(context).searchModel.mainData.data.length),
+            condition: state is! LoadingFavState,
+            builder: (context) {
+              if (cubit.responseData.data.isEmpty) {
+                return Center(
+                  child: Text('Your Favorite is Empty'),
+                );
+              } else {
+                return ListView.separated(
+                    itemBuilder: (context, index) => favoriteItem(
+                          model: cubit.responseData.data[index],
+                          context: context,
+                        ),
+                    separatorBuilder: (context, index) => defaultSeparator(),
+                    itemCount: cubit.responseData.data.length);
+              }
+            },
             fallback: (context) => Center(
               child: CircularProgressIndicator(),
             ),
@@ -36,10 +52,9 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget searchItem({
+  Widget favoriteItem({
     @required Data model,
     @required BuildContext context,
-    @required int index,
   }) {
     return InkWell(
       onTap: () {
@@ -60,7 +75,7 @@ class SearchScreen extends StatelessWidget {
                   ),
                   image: DecorationImage(
                     image: NetworkImage(
-                      '${model.image}',
+                      '${model.product.image}',
                     ),
                     fit: BoxFit.cover,
                   ),
@@ -73,24 +88,24 @@ class SearchScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // if (model.mainData.data[index].discount != 0)
-                    //   Padding(
-                    //     padding: const EdgeInsetsDirectional.only(
-                    //       bottom: 10.0,
-                    //     ),
-                    //     child: Container(
-                    //       child: Text(
-                    //         appLang(context).discount,
-                    //         style: white12regular(),
-                    //       ),
-                    //       padding: EdgeInsets.symmetric(
-                    //         horizontal: 5.0,
-                    //       ),
-                    //       color: Colors.red,
-                    //     ),
-                    //   ),
+                    if (model.product.discount != 0)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                          bottom: 10.0,
+                        ),
+                        child: Container(
+                          child: Text(
+                            appLang(context).discount,
+                            style: white12regular(),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.0,
+                          ),
+                          color: Colors.red,
+                        ),
+                      ),
                     Text(
-                      model.name,
+                      model.product.name,
                       maxLines: 2,
                       style: TextStyle(
                         height: 1.4,
@@ -113,7 +128,7 @@ class SearchScreen extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '${model.price.round()}',
+                                        '${model.product.price.round()}',
                                         style: black16bold().copyWith(
                                           height: .5,
                                           color: defaultColor,
@@ -131,48 +146,48 @@ class SearchScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  // if (model.discount != 0)
-                                  //   Row(
-                                  //     children: [
-                                  //       Text(
-                                  //         '${model.mainData.data[index].oldPrice.round()}',
-                                  //         style: black12bold().copyWith(
-                                  //           color: Colors.grey,
-                                  //           decoration: TextDecoration.lineThrough,
-                                  //         ),
-                                  //       ),
-                                  //       Padding(
-                                  //         padding: const EdgeInsets.symmetric(
-                                  //           horizontal: 5.0,
-                                  //         ),
-                                  //         child: Container(
-                                  //           width: 1.0,
-                                  //           height: 10.0,
-                                  //           color: Colors.grey,
-                                  //         ),
-                                  //       ),
-                                  //       Text(
-                                  //         '${model.mainData.data[index].discount}%',
-                                  //         style: black12bold().copyWith(
-                                  //           color: Colors.red,
-                                  //         ),
-                                  //       ),
-                                  //     ],
-                                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                                  //   ),
+                                  if (model.product.discount != 0)
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${model.product.oldPrice.round()}',
+                                          style: black12bold().copyWith(
+                                            color: Colors.grey,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 5.0,
+                                          ),
+                                          child: Container(
+                                            width: 1.0,
+                                            height: 10.0,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${model.product.discount}%',
+                                          style: black12bold().copyWith(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                    ),
                                 ],
                               ),
                             ),
                             FloatingActionButton(
                               onPressed: () {
                                 AppCubit.get(context).changeFav(
-                                  id: model.id,
-                                  context: context,
-                                );
+                                    id: model.product.id, context: context);
                               },
                               heroTag: null,
                               backgroundColor: AppCubit.get(context)
-                                      .favourites[model.id]
+                                      .favourites[model.product.id]
                                   ? Colors.red[400]
                                   : null,
                               mini: true,
@@ -183,14 +198,14 @@ class SearchScreen extends StatelessWidget {
                             FloatingActionButton(
                               onPressed: () {
                                 AppCubit.get(context).changeCart(
-                                  id: model.id,
+                                  id: model.product.id,
                                 );
                               },
                               heroTag: null,
-                              backgroundColor: AppCubit.get(context)
-                                      .cart[model.id]
-                                  ? Colors.green
-                                  : null,
+                              backgroundColor:
+                                  AppCubit.get(context).cart[model.product.id]
+                                      ? Colors.green
+                                      : null,
                               mini: true,
                               child: Icon(
                                 IconBroken.Buy,

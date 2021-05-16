@@ -10,6 +10,7 @@ import 'package:salla/models/home/home_model.dart';
 import 'package:salla/models/search/search_model.dart';
 import 'package:salla/modules/cart/cart_screen.dart';
 import 'package:salla/modules/categories/categories_screen.dart';
+import 'package:salla/modules/favorites/cubit/favorite_cubit.dart';
 import 'package:salla/modules/home/home_screen.dart';
 import 'package:salla/modules/settings/settings_screen.dart';
 import 'package:salla/shared/app_cubit/states.dart';
@@ -153,6 +154,7 @@ SearchModel searchModel;
 
   changeFav({
     @required int id,
+    @required BuildContext context
   }) {
     print(id);
 
@@ -168,13 +170,13 @@ SearchModel searchModel;
         .then((value) {
       print(value.data);
       addFavModel = AddFavModel.fromJson(value.data);
-
       if (addFavModel.status == false) {
         favourites[id] = !favourites[id];
       }
-
+      FavoriteCubit.get(context).getFavorites();
       emit(AppChangeFavSuccessState());
     }).catchError((error) {
+      print(error.toString());
       favourites[id] = !favourites[id];
       emit(AppChangeFavErrorState(error.toString()));
     });
@@ -216,17 +218,17 @@ SearchModel searchModel;
 
   bool isDark = false;
 
-  changeAppTheme(value) {
+  changeAppTheme(value)async {
     isDark = value;
-    setAppTheme(value);
+    await setAppTheme(value);
     emit(AppSetAppThemeState());
   }
 
-  startAppTheme() {
-    getAppTheme().then((value) {
+  startAppTheme()async {
+    await getAppTheme().then((value) {
       isDark = value;
-      emit(AppSetAppThemeState());
     });
+    emit(AppSetAppThemeState());
   }
 
   updateCart({

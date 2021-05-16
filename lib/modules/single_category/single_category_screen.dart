@@ -195,12 +195,13 @@ class SingleCategoryScreen extends StatelessWidget
                                 {
                                   AppCubit.get(context).changeFav(
                                     id: model.id,
+                                    context: context,
                                   );
                                 },
                                 heroTag : null,
                                 backgroundColor:
                                 AppCubit.get(context).favourites[model.id]
-                                    ? Colors.green
+                                    ? Colors.red[400]
                                     : null,
                                 mini: true,
                                 child: Icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salla/modules/favorites/favorite_screen.dart';
 import 'package:salla/modules/login/login_screen.dart';
 import 'package:salla/modules/settings/cubit/cubit.dart';
 import 'package:salla/modules/settings/cubit/states.dart';
@@ -20,8 +21,8 @@ class SettingsScreen extends StatelessWidget {
             ? Center(child: CircularProgressIndicator())
             : Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: ListView(
+                  //crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
                       radius: 80,
@@ -124,6 +125,19 @@ class SettingsScreen extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
+                                navigateTo(context, FavoriteScreen());
+                              },
+                              child: ListTile(
+                                leading: Icon(IconBroken.Heart),
+                                title: Text(appLang(context).favorite),
+                              ),
+                            ),
+                            Divider(
+                              height: 10,
+                              color: Colors.grey,
+                            ),
+                            InkWell(
+                              onTap: () {
                                 SettingsScreenCubit.get(context).userLogout().then(
                                       (value) {
                                     navigateAndFinish(context, LoginScreen());
@@ -135,6 +149,7 @@ class SettingsScreen extends StatelessWidget {
                                 title: Text(appLang(context).logout),
                               ),
                             ),
+
                           ],
                         );
                       },

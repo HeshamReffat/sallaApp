@@ -11,6 +11,7 @@ import 'package:salla/shared/di/di.dart';
 import 'package:salla/shared/network/remote/dio_helper.dart';
 
 import 'layout/home_layout.dart';
+import 'modules/favorites/cubit/favorite_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,12 +62,13 @@ class MyApp extends StatelessWidget {
               translationFile: translationFile,
               code: code,
             )
+            ..startAppTheme()
             ..getHomeData()
             ..getCategories()
-            ..getCart()
-            ..startAppTheme(),
+            ..getCart(),
         ),
         BlocProvider(create: (context) => di<SettingsScreenCubit>()..getUser()),
+        BlocProvider(create: (context) => di<FavoriteCubit>()..getFavorites()),
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
@@ -76,6 +78,9 @@ class MyApp extends StatelessWidget {
             darkTheme: AppCubit.get(context).isDark
                 ? ThemeData(
                     brightness: Brightness.dark,
+                    fontFamily: 'Jannah',
+                    primarySwatch: Colors.blue,
+                    accentColor: Colors.yellow,
                     floatingActionButtonTheme: FloatingActionButtonThemeData(
                         backgroundColor: Colors.blue))
                 : ThemeData(brightness: Brightness.light),

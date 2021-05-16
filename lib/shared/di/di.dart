@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:salla/modules/favorites/cubit/favorite_cubit.dart';
 import 'package:salla/modules/login/cubit/cubit.dart';
 import 'package:salla/modules/settings/cubit/cubit.dart';
 import 'package:salla/modules/single_category/cubit/cubit.dart';
@@ -46,6 +47,11 @@ Future init() async
         () => LoginCubit(
           di<Repository>(),
         ),
+  );
+  di.registerFactory<FavoriteCubit>(
+        () => FavoriteCubit(
+      di<Repository>(),
+    ),
   );
   di.registerFactory<SettingsScreenCubit>(
         () => SettingsScreenCubit(
