@@ -28,9 +28,6 @@ class LoginScreen extends StatelessWidget {
           child: BlocConsumer<LoginCubit, LoginStates>(
             listener: (context, state) {
               if (state is LoginSuccessState) {
-                di<CacheHelper>()
-                    .put('userData', state.userModel)
-                    .then((value) {
                   di<CacheHelper>()
                       .put('userToken', state.userModel.data.token)
                       .then((value) {
@@ -38,7 +35,6 @@ class LoginScreen extends StatelessWidget {
                       context,
                       HomeLayout(),
                     );
-                  }).catchError((error) {});
                 }).catchError((error) {});
               }
 

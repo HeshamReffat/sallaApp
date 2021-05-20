@@ -21,30 +21,33 @@ class FavoriteScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = FavoriteCubit.get(context).favModel;
-        return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(appLang(context).favorite),
-          ),
-          body: ConditionalBuilder(
-            condition: state is! LoadingFavState,
-            builder: (context) {
-              if (cubit.responseData.data.isEmpty) {
-                return Center(
-                  child: Text('Your Favorite is Empty'),
-                );
-              } else {
-                return ListView.separated(
-                    itemBuilder: (context, index) => favoriteItem(
-                          model: cubit.responseData.data[index],
-                          context: context,
-                        ),
-                    separatorBuilder: (context, index) => defaultSeparator(),
-                    itemCount: cubit.responseData.data.length);
-              }
-            },
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(),
+        return Directionality(
+          textDirection: AppCubit.get(context).appDirection,
+          child: Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(appLang(context).favorite),
+            ),
+            body: ConditionalBuilder(
+              condition: state is! LoadingFavState,
+              builder: (context) {
+                if (cubit.responseData.data.isEmpty) {
+                  return Center(
+                    child: Text('Your Favorite is Empty'),
+                  );
+                } else {
+                  return ListView.separated(
+                      itemBuilder: (context, index) => favoriteItem(
+                            model: cubit.responseData.data[index],
+                            context: context,
+                          ),
+                      separatorBuilder: (context, index) => defaultSeparator(),
+                      itemCount: cubit.responseData.data.length);
+                }
+              },
+              fallback: (context) => Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
           ),
         );

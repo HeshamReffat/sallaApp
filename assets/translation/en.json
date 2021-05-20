@@ -32,5 +32,6 @@
   "language": "Language",
   "logout": "Logout",
   "favorite": "Favorite",
-  "darkMode": "DarkMode"
+  "darkMode": "DarkMode",
+  "profile": "Profile"
 }

@@ -67,7 +67,7 @@ class CategoriesScreen extends StatelessWidget {
           ),
           Spacer(),
           Icon(
-            AppCubit.get(context).appDirection == TextDirection.ltr ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+            Icons.arrow_forward_ios ,
             size: 14.0,
           ),
         ],

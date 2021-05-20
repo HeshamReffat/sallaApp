@@ -26,6 +26,10 @@ Future<String> getUserToken() async
 {
   return await di<CacheHelper>().get('userToken');
 }
+Future<bool> deleteUserToken() async
+{
+  return await di<CacheHelper>().clear('userToken');
+}
 Future<bool> setAppTheme(bool dark) async
 {
   return await di<CacheHelper>().put('appTheme',dark);

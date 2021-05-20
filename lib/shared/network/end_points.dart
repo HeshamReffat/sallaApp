@@ -15,3 +15,7 @@ const LOGOUT = 'logout';
 const SEARCH = 'products/search';
 
 const FAVORITES = 'favorites';
+
+const UPDATE_PROFILE = 'update-profile';
+
+const Get_PROFILE = 'profile';

@@ -16,10 +16,22 @@ abstract class Repository {
   Future<Response> userLogout({
     @required String token,
   });
+  Future<Response> getProfile({
+    @required String token,
+  });
+
+  Future<Response> updateProfile({
+    @required String token,
+    @required String name,
+    @required String email,
+    @required String phone,
+  });
+
   Future<Response> searchProduct({
     @required String token,
     @required String productName,
   });
+
   Future<Response> getHomeData({
     @required String token,
   });
@@ -194,9 +206,24 @@ class RepoImplementation extends Repository {
   }
 
   @override
-  Future<Response> searchProduct({String token, String productName}) async{
-    return await dioHelper.postData(
-        url: SEARCH, token: token, data: {"text": "$productName"});
+  Future<Response> searchProduct({String token, String productName}) async {
+    return await dioHelper
+        .postData(url: SEARCH, token: token, data: {"text": "$productName"});
+  }
+
+  @override
+  Future<Response> updateProfile(
+      {String token, String name, String email, String phone}) async {
+    return await dioHelper.putData(
+      url: UPDATE_PROFILE,
+      token: token,
+      data: {"name": name, "email": email, "phone": phone},
+    );
+  }
+
+  @override
+  Future<Response> getProfile({String token}) async{
+    return await dioHelper.getData(url: Get_PROFILE,token: token);
   }
 
 // @override

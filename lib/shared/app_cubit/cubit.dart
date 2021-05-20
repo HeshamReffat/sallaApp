@@ -136,6 +136,7 @@ SearchModel searchModel;
   CartModel cartModel;
 
   getCart() {
+    cartProductsNumber = 0;
     emit(AppUpdateCartLoadingState());
 
     repository.getCartData(token: userToken).then((value) {
@@ -226,7 +227,7 @@ SearchModel searchModel;
 
   startAppTheme()async {
     await getAppTheme().then((value) {
-      isDark = value;
+      isDark = value ?? false;
     });
     emit(AppSetAppThemeState());
   }
