@@ -30,7 +30,7 @@ class UserProfile extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Stack(
+                  state is UploadImageLoadingState ? CircularProgressIndicator():Stack(
                     alignment: AlignmentDirectional.bottomStart,
                     children: [
                       Container(
@@ -55,7 +55,9 @@ class UserProfile extends StatelessWidget {
                         // ),
                       ),
                       IconButton(icon: Icon(Icons.camera), onPressed: (){
-                        cubit.getImage();
+                        cubit.getImage().then((value) {
+                          //cubit.updateImage();
+                        });
                       }),
                     ],
                   ),
@@ -67,7 +69,7 @@ class UserProfile extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0)),
+                        borderRadius: BorderRadius.circular(20.0),),
                     child: Row(
                       children: [
                         Icon(Icons.person_rounded),

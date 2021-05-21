@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:salla/models/cart/cart.dart';
+import 'package:salla/modules/check_out/check_out_screen.dart';
+import 'package:salla/modules/single_product/bloc/cubit.dart';
+import 'package:salla/modules/single_product/product_info.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
 import 'package:salla/shared/components/components.dart';
@@ -56,10 +59,10 @@ class CartScreen extends StatelessWidget {
                         10.0,
                       ),
                       child: defaultButton(
-                        function: () {},
-                        text: '${appLang(context).proceed} [ ${appLang(context)
-                            .total} : ${model.data.total.round()} ${appLang(
-                            context).currency} ]',
+                        function: () {
+                          navigateTo( context, CheckOutScreen());
+                        },
+                        text: appLang(context).proceed,
                       ),
                     ),
                   ],
@@ -81,7 +84,10 @@ class CartScreen extends StatelessWidget {
   }) =>
       InkWell(
         onTap: () {
-
+          navigateTo(context, ProductInfo());
+          ProductInfoCubit.get(context)
+              .getProductInfo(productId: model.product.id)
+              .then((value) {});
         },
         child: Padding(
           padding: const EdgeInsets.all(20.0),

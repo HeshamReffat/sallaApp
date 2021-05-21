@@ -19,3 +19,15 @@ const FAVORITES = 'favorites';
 const UPDATE_PROFILE = 'update-profile';
 
 const Get_PROFILE = 'profile';
+
+const PRODUCT_INFO_POINT = 'products';
+
+const ADDRESS_END_POINT = 'addresses';
+
+const ADD_ORDER_END_POINT = 'orders';
+
+const GET_ORDERS_END_POINT = 'orders';
+
+const CANCEL_ORDERS_END_POINT = 'cancel';
+
+const PROMO_CODES = 'promo-codes/validate';

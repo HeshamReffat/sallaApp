@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salla/layout/home_layout.dart';
 import 'package:salla/models/add_cart/add_cart_model.dart';
 import 'package:salla/models/add_fav/add_fav_model.dart';
+import 'package:salla/models/add_order/add_order_model.dart';
+import 'package:salla/models/address/address_model.dart';
 import 'package:salla/models/cart/cart.dart';
 import 'package:salla/models/categories/categories.dart';
 import 'package:salla/models/home/home_model.dart';
@@ -14,6 +17,7 @@ import 'package:salla/modules/favorites/cubit/favorite_cubit.dart';
 import 'package:salla/modules/home/home_screen.dart';
 import 'package:salla/modules/settings/settings_screen.dart';
 import 'package:salla/shared/app_cubit/states.dart';
+import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/language/app_language_model.dart';
 import 'package:salla/shared/network/repository.dart';
@@ -47,6 +51,8 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   AppLanguageModel languageModel;
+  AddOrderModel addOrderModel;
+  AddressModel addressModel;
   TextDirection appDirection = TextDirection.ltr;
 
   Future<void> setLanguage({
@@ -90,7 +96,85 @@ SearchModel searchModel;
       print(error.toString());
     });
   }
+  int selectedAdd = 0;
+  int addressLength;
 
+  void selectAddress(index) {
+    selectedAdd = index;
+    emit(SelectAddressState());
+  }
+
+  void changeIndex(index) {
+    currentIndex = index;
+    emit(ChangeIndex());
+  }
+  Future getAddress() async{
+    //  emit(HomeLoadingState()w);
+    if(userToken!=null && userToken !='')
+      repository.getAddresses(token: userToken).then((value) {
+        addressModel = AddressModel.fromJson(value.data);
+        // print(addressModel.data.data[0].name);
+        addressLength = addressModel.data.data.length;
+        emit(AppAddressSuccessState());
+      }).catchError((error) {
+        print(error.toString());
+        emit(AppAddressErrorState());
+      });
+  }
+  var promoCodeId;
+  Future checkPromoCode(promo)async{
+    repository.promoCodeValidate(token: userToken,promoCode:promo).then((value) {
+      promoCodeId = value.data['data']['id'];
+      emit(PromoSuccessState());
+      print(promoCodeId);
+    }).catchError((error){});
+  }
+  Future checkOut({addressId, promo}) async{
+    emit(CheckOutLoadingState());
+    return await repository
+        .confirmOrder(
+        token: userToken,
+        addressId: addressId,
+        payMethod: 1,
+        points: false,
+        promo: promoCodeId.toString())
+        .then((value) {
+      //
+      if (value.data['status'] == true) {
+        //  print(value.data);
+        addOrderModel = AddOrderModel.fromJson(value.data);
+        cartProductsNumber = 0;
+        //favProductsNumber = 0;
+        getCart();
+        getHomeData();
+        emit(CheckOutSuccessState());
+      } else {
+        print('error');
+        print(value.data);
+        addOrderModel = AddOrderModel.fromJson(value.data);
+        emit(CheckOutErrorState('error'));
+      }
+    }).catchError((error) {
+      print(error);
+      emit(CheckOutErrorState(error));
+    });
+  }
+  void deleteAdd({id}) {
+    emit(AddressLoadingState());
+    repository.deleteAddress(token: userToken, id: id).then((value) {
+      //  print(value.data);
+      getAddress();
+      emit(DeleteAddressSuccessState());
+    }).catchError((error) {
+      print(error);
+      emit(DeleteAddressErrorState(error));
+    });
+  }
+  void continueShopping(context){
+    changeIndex(0);
+    navigateAndFinish(context,HomeLayout());
+    emit(BackHomeState());
+  }
   getHomeData() {
     emit(AppLoadingState());
 
@@ -136,7 +220,6 @@ SearchModel searchModel;
   CartModel cartModel;
 
   getCart() {
-    cartProductsNumber = 0;
     emit(AppUpdateCartLoadingState());
 
     repository.getCartData(token: userToken).then((value) {

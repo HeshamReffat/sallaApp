@@ -2,8 +2,11 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla/models/search/search_model.dart';
+import 'package:salla/modules/single_product/bloc/cubit.dart';
+import 'package:salla/modules/single_product/product_info.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
+import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/styles/colors.dart';
 import 'package:salla/shared/styles/icon_broken.dart';
@@ -19,16 +22,19 @@ class SearchScreen extends StatelessWidget {
     return BlocConsumer<AppCubit,AppStates>(
       listener: (context,state){},
       builder: (context,state){
-        return Scaffold(
-          appBar: AppBar(title:Text(title,style: white20bold(),) ,centerTitle: true,),
-          body: ConditionalBuilder(
-            condition: state is !AppSearchLoadingState,
-            builder: (context) => ListView.separated(
-                itemBuilder: (context, index) => searchItem(context: context,index: index,model: AppCubit.get(context).searchModel.mainData.data[index]),
-                separatorBuilder: (context,index)=>Divider(),
-                itemCount: AppCubit.get(context).searchModel.mainData.data.length),
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(),
+        return Directionality(
+          textDirection: AppCubit.get(context).appDirection,
+          child: Scaffold(
+            appBar: AppBar(title:Text(title,style: white20bold(),) ,centerTitle: true,),
+            body: ConditionalBuilder(
+              condition: state is !AppSearchLoadingState,
+              builder: (context) => ListView.separated(
+                  itemBuilder: (context, index) => searchItem(context: context,index: index,model: AppCubit.get(context).searchModel.mainData.data[index]),
+                  separatorBuilder: (context,index)=>Divider(),
+                  itemCount: AppCubit.get(context).searchModel.mainData.data.length),
+              fallback: (context) => Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
           ),
         );
@@ -43,7 +49,10 @@ class SearchScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        //navigateTo(context, SingleCategoryScreen(),);
+        navigateTo(context, ProductInfo());
+        ProductInfoCubit.get(context)
+            .getProductInfo(productId: model.id)
+            .then((value) {});
       },
       child: Padding(
         padding: const EdgeInsets.all(20.0),

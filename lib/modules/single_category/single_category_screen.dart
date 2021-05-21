@@ -4,8 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla/models/home/home_model.dart';
 import 'package:salla/modules/single_category/cubit/cubit.dart';
 import 'package:salla/modules/single_category/cubit/states.dart';
+import 'package:salla/modules/single_product/bloc/cubit.dart';
+import 'package:salla/modules/single_product/product_info.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
+import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/di/di.dart';
 import 'package:salla/shared/styles/colors.dart';
@@ -29,30 +32,34 @@ class SingleCategoryScreen extends StatelessWidget
         {
           var model = SingleCategoryCubit.get(context).singleCategoryModel;
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                title,
-              ),
-            ),
-            body: ConditionalBuilder(
-              condition: model != null,
-              builder: (context) => ListView.separated(
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) => singleProductItem(
-                  model: model.data.data[index],
-                  context: context,
-                  index: index,
+          return Directionality(
+            textDirection: AppCubit.get(context).appDirection,
+            child: Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: Text(
+                  title,
                 ),
-                separatorBuilder: (context, index) => Container(
-                  width: double.infinity,
-                  height: 1.0,
-                  color: Colors.grey[300],
-                ),
-                itemCount: model.data.data.length,
               ),
-              fallback: (context) => Center(
-                child: CircularProgressIndicator(),
+              body: ConditionalBuilder(
+                condition: model != null,
+                builder: (context) => ListView.separated(
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) => singleProductItem(
+                    model: model.data.data[index],
+                    context: context,
+                    index: index,
+                  ),
+                  separatorBuilder: (context, index) => Container(
+                    width: double.infinity,
+                    height: 1.0,
+                    color: Colors.grey[300],
+                  ),
+                  itemCount: model.data.data.length,
+                ),
+                fallback: (context) => Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
           );
@@ -68,7 +75,10 @@ class SingleCategoryScreen extends StatelessWidget
   }) =>
       InkWell(
         onTap: () {
-          //navigateTo(context, SingleCategoryScreen(),);
+          navigateTo(context, ProductInfo());
+          ProductInfoCubit.get(context)
+              .getProductInfo(productId: model.id)
+              .then((value) {});
         },
         child: Padding(
           padding: const EdgeInsets.all(20.0),

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla/models/favourite/favorite_model.dart';
 import 'package:salla/modules/favorites/cubit/favorite_cubit.dart';
 import 'package:salla/modules/favorites/cubit/favorite_states.dart';
+import 'package:salla/modules/single_product/bloc/cubit.dart';
+import 'package:salla/modules/single_product/product_info.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
 import 'package:salla/shared/components/components.dart';
@@ -61,7 +63,10 @@ class FavoriteScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        //navigateTo(context, SingleCategoryScreen(),);
+        navigateTo(context, ProductInfo());
+        ProductInfoCubit.get(context)
+            .getProductInfo(productId: model.product.id)
+            .then((value) {});
       },
       child: Padding(
         padding: const EdgeInsets.all(20.0),

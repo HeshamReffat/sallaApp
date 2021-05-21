@@ -20,6 +20,9 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
   bool editEmail = true;
   bool editPhone = true;
   Data userData;
+  File _image;
+  final picker = ImagePicker();
+  String photoBase64;
 
   Future userLogout() async {
     repository.userLogout(token: userToken).then((value) {
@@ -29,7 +32,7 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
     });
   }
 
-  getUser() async {
+  getUserLocal() async {
     emit(LoadingSettingsState());
     await getUserInfo().then((value) {
       print(jsonDecode(value));
@@ -54,41 +57,59 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
     emit(EditPhoneProfileState());
   }
 
+  getUserProfile() {
+    repository.getProfile(token: userToken).then((value) async {
+      userModel = UserModel.fromJson(value.data);
+      await setUserInfo(jsonEncode(userModel.data)).then((value) async {
+        getUserLocal();
+      });
+    });
+  }
+
   updateProfile(name, email, phone, context) {
     emit(LoadingProfileState());
     repository
-        .updateProfile(token: userToken, name: name, email: email, phone: phone)
+        .updateProfile(token: userToken, name: name, email: email, phone: phone,image: photoBase64)
         .then((value) {
-      repository.getProfile(token: userToken).then((value) async {
-        userModel = UserModel.fromJson(value.data);
-        await setUserInfo(jsonEncode(userModel.data)).then((value) async {
-          getUser();
-            print('donee');
-            Navigator.pop(context);
-            emit(SuccessProfileState());
-          });
-        });
+      getUserProfile();
+      print('donee');
+      Navigator.pop(context);
+      emit(SuccessProfileState());
     }).catchError((error) {
       print('update>>>>>>> $error');
       emit(ErrorProfileState());
     });
   }
 
-  File _image;
-  final picker = ImagePicker();
-  String photoBase64;
+
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        List<int> imageBytes = _image.readAsBytesSync();
-        photoBase64 = base64Encode(imageBytes);
-        print(photoBase64);
-        emit(PickImageSuccessState());
-      } else {
-        print('No image selected.');
-        emit(PickImageErrorState());
-      }
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      List<int> imageBytes = _image.readAsBytesSync();
+      photoBase64 = base64Encode(imageBytes);
+      //print(photoBase64);
+      emit(PickImageSuccessState());
+    } else {
+      print('No image selected.');
+      emit(PickImageErrorState());
+    }
+  }
+
+  updateImage() {
+    emit(UploadImageLoadingState());
+    repository
+        .updateProfileImage(token: userToken, image: photoBase64)
+        .then((value) {
+
+      getUserProfile();
+      print('ImageuploadedSuccess');
+      print(value.toString());
+      emit(UploadImageSuccessState());
+    }).catchError((error) {
+      emit(UploadImageErrorState());
+      print(error.toString());
+    });
   }
 }

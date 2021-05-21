@@ -62,7 +62,31 @@ class AppCategoriesErrorState extends AppStates
 
   AppCategoriesErrorState(this.error);
 }
+class SelectAddressState extends AppStates{}
+class AddressLoadingState extends AppStates{}
+class DeleteAddressSuccessState extends AppStates{}
+class DeleteAddressErrorState extends AppStates{
+  var error;
+  DeleteAddressErrorState(this.error);
+}
+class PromoLoadingState extends AppStates{}
+class PromoSuccessState extends AppStates{}
 
+class CheckOutLoadingState extends AppStates{}
+class CheckOutSuccessState extends AppStates{}
+class CheckOutErrorState extends AppStates{
+  var error;
+  CheckOutErrorState(this.error);
+}
+
+
+class AddToOrRemoveCartState extends AppStates{}
+class CartLoadingState extends AppStates{}
+class UpdateCartLoadingState extends AppStates{}
+class CartErrorState extends AppStates{
+  var error;
+  CartErrorState(this.error);
+}
 class AppSelectLanguageState extends AppStates {}
 
 class AppChangeBottomIndexState extends AppStates {}
@@ -72,6 +96,10 @@ class AppSetLanguageState extends AppStates {}
 class AppSetAppDirectionState extends AppStates {}
 class AppSetAppThemeState extends AppStates {}
 class AppGetUserState extends AppStates {}
+class AppAddressSuccessState extends AppStates {}
+class AppAddressErrorState extends AppStates {}
+class ChangeIndex extends AppStates {}
+class BackHomeState extends AppStates {}
 
 class AppSuccessState extends AppStates
 {

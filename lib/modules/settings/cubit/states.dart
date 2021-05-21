@@ -12,3 +12,6 @@ class SuccessProfileState extends SettingsScreenStates{}
 class LoadingProfileState extends SettingsScreenStates{}
 class PickImageSuccessState extends SettingsScreenStates{}
 class PickImageErrorState extends SettingsScreenStates{}
+class UploadImageLoadingState extends SettingsScreenStates{}
+class UploadImageErrorState extends SettingsScreenStates{}
+class UploadImageSuccessState extends SettingsScreenStates{}

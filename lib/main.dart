@@ -12,6 +12,8 @@ import 'package:salla/shared/network/remote/dio_helper.dart';
 
 import 'layout/home_layout.dart';
 import 'modules/favorites/cubit/favorite_cubit.dart';
+import 'modules/orders/bloc/cubit.dart';
+import 'modules/single_product/bloc/cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,10 +67,14 @@ class MyApp extends StatelessWidget {
             ..startAppTheme()
             ..getHomeData()
             ..getCategories()
-            ..getCart(),
+            ..getCart()
+            ..getAddress(),
         ),
-        BlocProvider(create: (context) => di<SettingsScreenCubit>()..getUser()),
+        BlocProvider(
+            create: (context) => di<SettingsScreenCubit>()..getUserLocal()),
         BlocProvider(create: (context) => di<FavoriteCubit>()..getFavorites()),
+        BlocProvider(create: (context) => di<ProductInfoCubit>()),
+        BlocProvider(create: (context) => di<MyOrdersCubit>()),
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},

@@ -35,6 +35,37 @@ class AppLanguageModel
   String logout;
   String favorite;
   String profile;
+  String description;
+  String emptyOrder;
+  String date;
+  String orderStatus;
+  String cancelOrder;
+  String shippingAdd;
+  String products;
+  String addresses;
+  String orders;
+  String quantity;
+
+  String totalPrice;
+  String paymentMethod;
+  String cash;
+  String credit;
+  String shippingAddress;
+  String newAddress;
+  String shippingCity;
+  String shippingRegion;
+  String shippingAddressDetails;
+  String shippingNotes;
+  String pay;
+  String checkOut;
+  String promo;
+  String continueShop;
+  String addressError;
+  String vat;
+  String disc;
+  String orderDetails;
+  String subTotal;
+  String price;
 
   AppLanguageModel({
     this.title1,
@@ -72,6 +103,36 @@ class AppLanguageModel
     this.logout,
     this.favorite,
     this.profile,
+    this.description,
+    this.addresses,
+    this.cancelOrder,
+    this.date,
+    this.emptyOrder,
+    this.orders,
+    this.orderStatus,
+    this.products,
+    this.shippingAdd,
+    this.quantity,
+    this.cash,
+    this.checkOut,
+    this.continueShop,
+    this.credit,
+    this.newAddress,
+    this.pay,
+    this.paymentMethod,
+    this.promo,
+    this.shippingAddress,
+    this.shippingAddressDetails,
+    this.shippingCity,
+    this.shippingNotes,
+    this.shippingRegion,
+    this.totalPrice,
+    this.addressError,
+    this.disc,
+    this.orderDetails,
+    this.subTotal,
+    this.vat,
+    this.price,
   });
 
   AppLanguageModel.fromJson(Map<String, dynamic> json)
@@ -111,6 +172,36 @@ class AppLanguageModel
     logout = json['logout'];
     favorite = json['favorite'];
     profile = json['profile'];
+    description = json['description'];
+    cancelOrder = json['cancelOrder'];
+    emptyOrder = json['emptyOrder'];
+    date = json['date'];
+    orderStatus = json['orderStatus'];
+    shippingAdd = json['shippingAdd'];
+    products = json['products'];
+    addresses = json['addresses'];
+    orders = json['orders'];
+    quantity = json['quantity'];
+    totalPrice = json['totalPrice'];
+    paymentMethod = json['paymentMethod'];
+    cash = json['cash'];
+    credit = json['credit'];
+    shippingAddress = json['shippingAddress'];
+    newAddress = json['newAddress'];
+    shippingCity = json['shippingCity'];
+    shippingRegion = json['shippingRegion'];
+    shippingAddressDetails = json['shippingAddressDetails'];
+    shippingNotes = json['shippingNotes'];
+    pay = json['pay'];
+    checkOut = json['checkOut'];
+    promo = json['promo'];
+    continueShop = json['continueShop'];
+    addressError = json['addressError'];
+    subTotal = json['subTotal'];
+    vat = json['vat'];
+    disc = json['disc'];
+    orderDetails = json['orderDetails'];
+    price = json['price'];
   }
 
   /*Map<String, dynamic> toJson() {

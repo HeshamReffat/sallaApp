@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salla/modules/favorites/favorite_screen.dart';
 import 'package:salla/modules/login/login_screen.dart';
+import 'package:salla/modules/orders/my_orders.dart';
 import 'package:salla/modules/settings/cubit/cubit.dart';
 import 'package:salla/modules/settings/cubit/states.dart';
 import 'package:salla/modules/user/profile.dart';
@@ -66,10 +67,23 @@ class SettingsScreen extends StatelessWidget {
                                 height: 10,
                                 color: Colors.grey,
                               ),
+                              InkWell(
+                                onTap: () {
+                                  navigateTo(context, MyOrdersScreen());
+                                },
+                                child: ListTile(
+                                  leading: Icon(IconBroken.Bag_2),
+                                  title: Text(appLang(context).orders),
+                                ),
+                              ),
+                              Divider(
+                                height: 10,
+                                color: Colors.grey,
+                              ),
                               Theme(
                                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                                 child: ExpansionTile(
-                                  leading: Icon(IconBroken.Paper),
+                                  leading: Icon(Icons.language_outlined),
                                   title: Text(appLang(context).language),
                                   children: [
                                     InkWell(
@@ -82,6 +96,7 @@ class SettingsScreen extends StatelessWidget {
                                                   code: 'ar',
                                                 )
                                                 .then((value) {
+                                              AppCubit.get(context).cartProductsNumber = 0;
                                               AppCubit.get(context).getHomeData();
                                               AppCubit.get(context).getCart();
                                               AppCubit.get(context).getCategories();
@@ -104,6 +119,7 @@ class SettingsScreen extends StatelessWidget {
                                                   code: 'en',
                                                 )
                                                 .then((value) {
+                                              AppCubit.get(context).cartProductsNumber = 0;
                                                   AppCubit.get(context).getHomeData();
                                                   AppCubit.get(context).getCart();
                                                   AppCubit.get(context).getCategories();
@@ -125,7 +141,7 @@ class SettingsScreen extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               ListTile(
-                                leading: Icon(IconBroken.Setting),
+                                leading: Icon(Icons.brightness_6_rounded),
                                 title: Text(appLang(context).darkMode),
                                 trailing: Switch(
                                   value: AppCubit.get(context).isDark,

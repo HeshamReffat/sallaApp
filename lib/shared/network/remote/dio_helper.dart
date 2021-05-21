@@ -23,6 +23,10 @@ abstract class DioHelper {
     dynamic query,
     String token,
   });
+  Future<Response> delete({
+    @required String url,
+    String token,
+  });
 }
 
 class DioImplementation extends DioHelper
@@ -86,6 +90,17 @@ class DioImplementation extends DioHelper
       url,
       queryParameters: query,
     );
+  }
+  @override
+  Future<Response> delete({String url, String token})async {
+    dio.options.headers = {
+      'Authorization': token ?? '',
+      'lang': appLanguage,
+      'Content-Type': 'application/json',
+    };
+
+    return await dio.delete(url,);
+
   }
 }
 //

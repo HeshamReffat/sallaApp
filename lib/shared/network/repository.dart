@@ -16,6 +16,7 @@ abstract class Repository {
   Future<Response> userLogout({
     @required String token,
   });
+
   Future<Response> getProfile({
     @required String token,
   });
@@ -25,6 +26,62 @@ abstract class Repository {
     @required String name,
     @required String email,
     @required String phone,
+    @required String image,
+  });
+
+  Future<Response> getOrderDetails({
+    token,
+    orderId,
+  });
+
+  Future<Response> getOrders({token});
+
+  Future<Response> cancelOrder({
+    token,
+    orderId,
+  });
+
+  Future<Response> getAddresses({
+    token,
+  });
+
+  Future<Response> deleteAddress({
+    token,
+    id,
+  });
+
+  Future<Response> promoCodeValidate({
+    token,
+    promoCode,
+  });
+
+  Future<Response> addAddress({
+    token,
+    String name,
+    String city,
+    String region,
+    String details,
+    double latitude,
+    double longitude,
+    String notes,
+  });
+
+  Future<Response> confirmOrder({
+    token,
+    int addressId,
+    int payMethod,
+    dynamic promo,
+    bool points,
+  });
+
+  Future<Response> updateProfileImage({
+    @required String token,
+    @required String image,
+  });
+
+  Future<Response> getProductInfo({
+    @required token,
+    @required id,
   });
 
   Future<Response> searchProduct({
@@ -103,6 +160,74 @@ class RepoImplementation extends Repository {
         'password': password,
       },
     );
+  }
+
+  @override
+  Future<Response> getOrders({token}) async {
+    return await dioHelper.getData(url: GET_ORDERS_END_POINT, token: token);
+  }
+
+  @override
+  Future<Response> getOrderDetails({token, orderId}) async {
+    return await dioHelper.getData(
+      url: '$GET_ORDERS_END_POINT/$orderId',
+      token: token,
+    );
+  }
+
+  @override
+  Future<Response> cancelOrder({token, orderId}) async {
+    return await dioHelper.getData(
+      url: '$GET_ORDERS_END_POINT/$orderId/$CANCEL_ORDERS_END_POINT',
+      token: token,
+    );
+  }
+
+  @override
+  Future<Response> getAddresses({token}) async {
+    return await dioHelper.getData(url: ADDRESS_END_POINT, token: token);
+  }
+
+  @override
+  Future<Response> addAddress(
+      {token,
+      String name,
+      String city,
+      String region,
+      String details,
+      double latitude,
+      double longitude,
+      String notes}) async {
+    return await dioHelper
+        .postData(url: ADDRESS_END_POINT, token: token, data: {
+      "name": name,
+      "city": city,
+      "region": region,
+      "details": details,
+      "latitude": latitude,
+      "longitude": longitude,
+      "notes": notes
+    });
+  }
+
+  @override
+  Future<Response> deleteAddress({token, id}) async {
+    return await dioHelper.delete(
+      token: token,
+      url: '$ADDRESS_END_POINT/$id',
+    );
+  }
+
+  @override
+  Future<Response> confirmOrder(
+      {token, int addressId, int payMethod, dynamic promo, bool points}) async {
+    return await dioHelper
+        .postData(url: ADD_ORDER_END_POINT, token: token, data: {
+      'address_id': addressId,
+      'payment_method': payMethod,
+      'use_points': points,
+      'promo_code_id': promo
+    });
   }
 
   @override
@@ -213,17 +338,45 @@ class RepoImplementation extends Repository {
 
   @override
   Future<Response> updateProfile(
-      {String token, String name, String email, String phone}) async {
+      {String token,
+      String name,
+      String email,
+      String phone,
+      String image}) async {
     return await dioHelper.putData(
       url: UPDATE_PROFILE,
       token: token,
-      data: {"name": name, "email": email, "phone": phone},
+      data: {"name": name, "email": email, "phone": phone, "image": image},
     );
   }
 
   @override
-  Future<Response> getProfile({String token}) async{
-    return await dioHelper.getData(url: Get_PROFILE,token: token);
+  Future<Response> getProfile({String token}) async {
+    return await dioHelper.getData(url: Get_PROFILE, token: token);
+  }
+
+  @override
+  Future<Response> updateProfileImage({String token, String image}) async {
+    return await dioHelper.putData(
+      url: UPDATE_PROFILE,
+      token: token,
+      data: {"image": image},
+    );
+  }
+
+  @override
+  Future<Response> getProductInfo({token, id}) async {
+    return await dioHelper.getData(
+        url: '$PRODUCT_INFO_POINT/$id', token: token);
+  }
+
+  @override
+  Future<Response> promoCodeValidate({token, promoCode}) async {
+    return await dioHelper.postData(
+      url: PROMO_CODES,
+      token: token,
+      data: {"code": promoCode},
+    );
   }
 
 // @override

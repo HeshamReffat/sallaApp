@@ -21,6 +21,8 @@ TextStyle black18bold() => TextStyle(
   fontSize: 18.0,
   fontWeight: FontWeight.bold,
 );
+TextStyle grey14() => TextStyle(fontSize: 14, color: Colors.grey);
+
 TextStyle black20bold() => TextStyle(
   fontSize: 20.0,
   fontWeight: FontWeight.bold,
