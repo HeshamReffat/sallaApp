@@ -13,6 +13,13 @@ abstract class Repository {
     @required String password,
   });
 
+  Future<Response> userSignUp({
+    @required String userName,
+    @required String email,
+    @required String phone,
+    @required String password,
+  });
+
   Future<Response> userLogout({
     @required String token,
   });
@@ -26,7 +33,6 @@ abstract class Repository {
     @required String name,
     @required String email,
     @required String phone,
-    @required String image,
   });
 
   Future<Response> getOrderDetails({
@@ -66,6 +72,18 @@ abstract class Repository {
     String notes,
   });
 
+  Future<Response> updateAddress({
+    addressId,
+    token,
+    String name,
+    String city,
+    String region,
+    String details,
+    double latitude,
+    double longitude,
+    String notes,
+  });
+
   Future<Response> confirmOrder({
     token,
     int addressId,
@@ -77,6 +95,9 @@ abstract class Repository {
   Future<Response> updateProfileImage({
     @required String token,
     @required String image,
+    @required String name,
+    @required String email,
+    @required String phone,
   });
 
   Future<Response> getProductInfo({
@@ -160,6 +181,17 @@ class RepoImplementation extends Repository {
         'password': password,
       },
     );
+  }
+
+  @override
+  Future<Response> userSignUp(
+      {String userName, String email, String phone, String password}) async {
+    return await dioHelper.postData(url: SIGN_UP_END_POINT, data: {
+      'name': userName,
+      'email': email,
+      'phone': phone,
+      'password': password,
+    });
   }
 
   @override
@@ -341,12 +373,11 @@ class RepoImplementation extends Repository {
       {String token,
       String name,
       String email,
-      String phone,
-      String image}) async {
+      String phone,}) async {
     return await dioHelper.putData(
       url: UPDATE_PROFILE,
       token: token,
-      data: {"name": name, "email": email, "phone": phone, "image": image},
+      data: {"name": name, "email": email, "phone": phone,},
     );
   }
 
@@ -356,11 +387,16 @@ class RepoImplementation extends Repository {
   }
 
   @override
-  Future<Response> updateProfileImage({String token, String image}) async {
+  Future<Response> updateProfileImage({String token, String image,String name,String email, String phone}) async {
     return await dioHelper.putData(
       url: UPDATE_PROFILE,
       token: token,
-      data: {"image": image},
+      data: {
+        "image": image,
+        "name": name,
+        "email": email,
+        "phone": phone,
+      },
     );
   }
 
@@ -377,6 +413,30 @@ class RepoImplementation extends Repository {
       token: token,
       data: {"code": promoCode},
     );
+  }
+
+  @override
+  Future<Response> updateAddress({
+    addressId,
+    token,
+    String name,
+    String city,
+    String region,
+    String details,
+    double latitude,
+    double longitude,
+    String notes,
+  }) async {
+    return await dioHelper
+        .putData(url: '${ADDRESS_END_POINT}/$addressId',token: token, data: {
+      "name": name,
+      "city": city,
+      "region": region,
+      "details": details,
+      "latitude": latitude,
+      "longitude": longitude,
+      "notes": notes
+    });
   }
 
 // @override

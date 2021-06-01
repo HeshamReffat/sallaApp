@@ -20,57 +20,63 @@ class CartScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var model = AppCubit.get(context).cartModel;
-        if(model.data.cartItems.isEmpty){
-          return Center(child: Text('Your Cart is empty'),);
-        }else {
+        if (model.data.cartItems.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: AssetImage('assets/images/emptystate.png'),
+                ),
+                Text(appLang(context).emptyCart),
+              ],
+            ),
+          );
+        } else {
           return ConditionalBuilder(
             condition: model != null,
-            builder: (context) =>
-                Column(
-                  children:
-                  [
-                    if (state is AppUpdateCartLoadingState)
-                      LinearProgressIndicator(
-                        backgroundColor: Colors.grey[300],
-                      ),
-                    Expanded(
-                      child: ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return cartItem(
-                            model: model.data.cartItems[index],
-                            context: context,
-                            index: index,
-                          );
-                        },
-                        separatorBuilder: (context, index) =>
-                            Container(
-                              width: double.infinity,
-                              height: 1.0,
-                              color: Colors.grey[300],
-                            ),
-                        itemCount: model.data.cartItems.length,
-                      ),
-                    ),
-                    Container(
+            builder: (context) => Column(
+              children: [
+                if (state is AppUpdateCartLoadingState)
+                  LinearProgressIndicator(
+                    backgroundColor: Colors.grey[300],
+                  ),
+                Expanded(
+                  child: ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return cartItem(
+                        model: model.data.cartItems[index],
+                        context: context,
+                        index: index,
+                      );
+                    },
+                    separatorBuilder: (context, index) => Container(
                       width: double.infinity,
-                      //color: Colors.grey[100],
-                      padding: EdgeInsets.all(
-                        10.0,
-                      ),
-                      child: defaultButton(
-                        function: () {
-                          navigateTo( context, CheckOutScreen());
-                        },
-                        text: appLang(context).proceed,
-                      ),
+                      height: 1.0,
+                      color: Colors.grey[300],
                     ),
-                  ],
+                    itemCount: model.data.cartItems.length,
+                  ),
                 ),
-            fallback: (context) =>
-                Center(
-                  child: CircularProgressIndicator(),
+                Container(
+                  width: double.infinity,
+                  //color: Colors.grey[100],
+                  padding: EdgeInsets.all(
+                    10.0,
+                  ),
+                  child: defaultButton(
+                    function: () {
+                      navigateTo(context, CheckOutScreen());
+                    },
+                    text: appLang(context).proceed,
+                  ),
                 ),
+              ],
+            ),
+            fallback: (context) => Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
       },
@@ -101,7 +107,7 @@ class CartScreen extends StatelessWidget {
                 icon: Icons.delete,
                 onTap: () {
                   AppCubit.get(context).changeCart(
-                    id:model.product.id,
+                    id: model.product.id,
                   );
                 },
               ),
@@ -202,7 +208,8 @@ class CartScreen extends StatelessWidget {
                                               ),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
                                                 horizontal: 5.0,
                                               ),
                                               child: Container(

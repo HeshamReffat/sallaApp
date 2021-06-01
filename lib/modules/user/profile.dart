@@ -26,185 +26,182 @@ class UserProfile extends StatelessWidget {
               title: Text(appLang(context).profile),
               centerTitle: true,
             ),
-            body: state is LoadingProfileState ? Center(child: CircularProgressIndicator()):Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  state is UploadImageLoadingState ? CircularProgressIndicator():Stack(
-                    alignment: AlignmentDirectional.bottomStart,
-                    children: [
-                      Container(
-                        height: 200,
-                        width: 250,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.green),
+            body: state is LoadingProfileState
+                ? Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        state is UploadImageLoadingState
+                            ? CircularProgressIndicator()
+                            : Stack(
+                                alignment: AlignmentDirectional.bottomStart,
+                                children: [
+                                  Container(
+                                    height: 200,
+                                    width: 250,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              cubit.userData.image),
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.camera),
+                                      onPressed: () {
+                                        cubit.getImage().then((value) {
+                                          cubit.updateImage(
+                                            name: cubit.userData.name,
+                                            email: cubit.userData.email,
+                                            phone: cubit.userData.phone,
+                                          );
+                                        });
+                                      }),
+                                ],
+                              ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                          alignment: AlignmentDirectional.centerStart,
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    SettingsScreenCubit.get(context)
-                                        .userData
-                                        .image),
-                                fit: BoxFit.cover)),
-                        // child: CircleAvatar(
-                        //   radius: 80,
-                        //   backgroundImage: SettingsScreenCubit.get(context).userData != null
-                        //       ? NetworkImage(
-                        //
-                        //         )
-                        //       : AssetImage('assets/images/logo.jpg'),
-                        // ),
-                      ),
-                      IconButton(icon: Icon(Icons.camera), onPressed: (){
-                        cubit.getImage().then((value) {
-                          //cubit.updateImage();
-                        });
-                      }),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Container(
-                    alignment: AlignmentDirectional.centerStart,
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),),
-                    child: Row(
-                      children: [
-                        Icon(Icons.person_rounded),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            textAlign: TextAlign.start,
-                            autofocus: true,
-                            controller: nameCon,
-                            readOnly: cubit.editName,
-                            decoration: InputDecoration(
-                                hintText: SettingsScreenCubit.get(context)
-                                    .userData
-                                    .name,
-                                border: InputBorder.none),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.person_rounded),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  textAlign: TextAlign.start,
+                                  autofocus: true,
+                                  controller: nameCon
+                                    ..text = cubit.userData.name,
+                                  readOnly: cubit.editName,
+                                  decoration:
+                                      InputDecoration(border: InputBorder.none),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  cubit.newName();
+                                },
+                                child: cubit.editName == true
+                                    ? Icon(
+                                        Icons.drive_file_rename_outline,
+                                      )
+                                    : Container(),
+                              ),
+                            ],
                           ),
                         ),
-                        InkWell(
-                            onTap: () {
-                              cubit.newName();
-                            },
-                            child: cubit.editName == false
-                                ? Icon(
-                                    Icons.check,
-                                    color: Colors.green,
-                                  )
-                                : Icon(Icons.drive_file_rename_outline)),
+                        Divider(
+                          height: 20,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          alignment: AlignmentDirectional.centerStart,
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: Row(
+                            children: [
+                              Icon(Icons.alternate_email_outlined),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  textAlign: TextAlign.start,
+                                  controller: emailCon
+                                    ..text = cubit.userData.email,
+                                  autofocus: true,
+                                  keyboardType: TextInputType.emailAddress,
+                                  readOnly: cubit.editEmail,
+                                  decoration:
+                                      InputDecoration(border: InputBorder.none),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  cubit.newEmail();
+                                },
+                                child: cubit.editEmail == true
+                                    ? Icon(Icons.drive_file_rename_outline)
+                                    : Container(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 20,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          alignment: AlignmentDirectional.centerStart,
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: Row(
+                            children: [
+                              Icon(Icons.mobile_screen_share_outlined),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  textAlign: TextAlign.start,
+                                  controller: phoneCon
+                                    ..text = cubit.userData.phone,
+                                  autofocus: true,
+                                  keyboardType: TextInputType.number,
+                                  readOnly: cubit.editPhone,
+                                  decoration:
+                                      InputDecoration(border: InputBorder.none),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  cubit.newPhone();
+                                },
+                                child: cubit.editPhone == true
+                                    ? Icon(Icons.drive_file_rename_outline)
+                                    : Container(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        defaultButton(
+                          color: cubit.update == false ?Colors.grey:Colors.blue,
+                          function: cubit.update == false? null:() {
+                            if (emailCon.text.isNotEmpty &&
+                                nameCon.text.isNotEmpty &&
+                                phoneCon.text.isNotEmpty) {
+                              cubit.updateProfile(nameCon.text, emailCon.text,
+                                  phoneCon.text, context);
+                              cubit.editName = true;
+                              cubit.editEmail = true;
+                              cubit.editPhone = true;
+                              cubit.update = false;
+                            } else {
+                              print('complete data');
+                            }
+                          },
+                          text: appLang(context).update,
+                        ),
                       ],
                     ),
                   ),
-                  Divider(
-                    height: 20,
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    alignment: AlignmentDirectional.centerStart,
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: Row(
-                      children: [
-                        Icon(Icons.alternate_email_outlined),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            textAlign: TextAlign.start,
-                            controller: emailCon,
-                            autofocus: true,
-                            keyboardType: TextInputType.emailAddress,
-                            readOnly: cubit.editEmail,
-                            decoration: InputDecoration(
-                                hintText: SettingsScreenCubit.get(context)
-                                    .userData
-                                    .email,
-                                border: InputBorder.none),
-                          ),
-                        ),
-                        InkWell(
-                            onTap: () {
-                              cubit.newEmail();
-                            },
-                            child: cubit.editEmail == false
-                                ? Icon(
-                                    Icons.check,
-                                    color: Colors.green,
-                                  )
-                                : Icon(Icons.drive_file_rename_outline)),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 20,
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    alignment: AlignmentDirectional.centerStart,
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: Row(
-                      children: [
-                        Icon(Icons.mobile_screen_share_outlined),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            textAlign: TextAlign.start,
-                            controller: phoneCon,
-                            autofocus: true,
-                            keyboardType: TextInputType.number,
-                            readOnly: cubit.editPhone,
-                            decoration: InputDecoration(
-                                hintText: SettingsScreenCubit.get(context)
-                                    .userData
-                                    .phone,
-                                border: InputBorder.none),
-                          ),
-                        ),
-                        InkWell(
-                            onTap: () {
-                              cubit.newPhone();
-                            },
-                            child: cubit.editPhone == false
-                                ? Icon(
-                                    Icons.check,
-                                    color: Colors.green,
-                                  )
-                                : Icon(Icons.drive_file_rename_outline)),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  defaultButton(
-                    function: () {
-                      if (emailCon.text.isNotEmpty &&
-                          nameCon.text.isNotEmpty &&
-                          phoneCon.text.isNotEmpty) {
-                        cubit.updateProfile(
-                            nameCon.text, emailCon.text, phoneCon.text,context);
-                      } else {
-                        print('complete data');
-                      }
-                    },
-                    text: 'Update',
-                  ),
-                ],
-              ),
-            ),
           );
         },
       ),

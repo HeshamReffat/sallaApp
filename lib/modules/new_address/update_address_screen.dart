@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salla/models/address/address_model.dart';
 import 'package:salla/modules/new_address/bloc/cubit.dart';
 import 'package:salla/modules/new_address/bloc/states.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
@@ -8,20 +9,27 @@ import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/di/di.dart';
 import 'package:salla/shared/styles/styles.dart';
 
-class AddNewAddress extends StatelessWidget {
-  var nameCon = TextEditingController();
-  var cityCon = TextEditingController();
-  var regionCon = TextEditingController();
-  var detailsCon = TextEditingController();
-  var latCon = TextEditingController();
-  var longCon = TextEditingController();
-  var notesCon = TextEditingController();
+class UpdateAddress extends StatelessWidget {
+  var id;
+  String name;
+  String city;
+  String region;
+  String details;
+  String notes;
+  TextEditingController nameCon = TextEditingController();
+  TextEditingController cityCon = TextEditingController();
+  TextEditingController regionCon = TextEditingController();
+  TextEditingController detailsCon = TextEditingController();
+  TextEditingController latCon = TextEditingController();
+  TextEditingController longCon = TextEditingController();
+  TextEditingController notesCon = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  UpdateAddress({this.id,this.name,this.city,this.region,this.details,this.notes});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di<NewAddressCubit>()..getGeoLocation(),
+      create: (context) => di<NewAddressCubit>(),
       child: BlocConsumer<NewAddressCubit, NewAddressStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -34,7 +42,7 @@ class AddNewAddress extends StatelessWidget {
                   )
                 : Scaffold(
                     appBar: AppBar(
-                      title: Text(appLang(context).newAddress),
+                      title: Text(appLang(context).updateAddress),
                       elevation: 1.0,
                     ),
                     body: Form(
@@ -46,34 +54,35 @@ class AddNewAddress extends StatelessWidget {
                             newAddressFormField(
                                 labelText: appLang(context).addressName,
                                 errorText: appLang(context).addressNameError,
-                                controller: nameCon),
+                                controller: nameCon..text=this.name),
                             newAddressFormField(
                                 labelText: appLang(context).addressCity,
                                 errorText: appLang(context).addressErrorCity,
-                                controller: cityCon),
+                                controller: cityCon..text=this.city),
                             newAddressFormField(
                                 labelText: appLang(context).addressRegion,
                                 errorText: appLang(context).addressErrorRegion,
-                                controller: regionCon),
+                                controller: regionCon..text=this.region),
                             newAddressFormField(
                                 labelText: appLang(context).addressDetails,
                                 errorText: appLang(context).addressErrorDetails,
-                                controller: detailsCon),
+                                controller: detailsCon..text=this.details),
                             newAddressFormField(
                                 labelText: appLang(context).addressNotes,
                                 errorText: appLang(context).addressErrorNotes,
-                                controller: notesCon),
+                                controller: notesCon..text=this.notes),
                             Spacer(),
                             defaultButton(
                                 function: () {
-                                  if(formKey.currentState.validate()) {
+                                  if (formKey.currentState.validate()) {
                                     if (nameCon.text.isNotEmpty &&
                                         cityCon.text.isNotEmpty &&
                                         regionCon.text.isNotEmpty &&
                                         detailsCon.text.isNotEmpty &&
                                         notesCon.text.isNotEmpty) {
                                       cubit
-                                          .addNewAddress(
+                                          .updateAddress(
+                                        addressId: this.id,
                                         name: nameCon.text,
                                         city: cityCon.text,
                                         region: regionCon.text,
@@ -90,7 +99,7 @@ class AddNewAddress extends StatelessWidget {
                                     } else {}
                                   }
                                 },
-                                text: appLang(context).newAddress)
+                                text: appLang(context).updateAddress)
                           ],
                         ),
                       ),

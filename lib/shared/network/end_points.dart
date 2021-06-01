@@ -31,3 +31,5 @@ const GET_ORDERS_END_POINT = 'orders';
 const CANCEL_ORDERS_END_POINT = 'cancel';
 
 const PROMO_CODES = 'promo-codes/validate';
+
+const SIGN_UP_END_POINT = 'register';

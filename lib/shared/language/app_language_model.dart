@@ -1,11 +1,29 @@
-class AppLanguageModel
-{
-  String title1;
+class AppLanguageModel {
+  String title;
+  String subtitle1;
+  String subtitle2;
   String title2;
+  String subtitle12;
+  String subtitle22;
   String title3;
-  String body1;
-  String body2;
-  String body3;
+  String subtitle13;
+  String subtitle23;
+  String title4;
+  String subtitle14;
+  String subtitle24;
+  String skip;
+  String welcome;
+  String signInTitle;
+  String userName;
+  String userNameError;
+  String passError;
+  String emailError;
+  String member;
+  String phone;
+  String phoneError;
+  String signIn;
+  String newAccount;
+  String signUp;
   String loginTitle;
   String loginSubTitle;
   String email;
@@ -45,7 +63,6 @@ class AppLanguageModel
   String addresses;
   String orders;
   String quantity;
-
   String totalPrice;
   String paymentMethod;
   String cash;
@@ -66,14 +83,47 @@ class AppLanguageModel
   String orderDetails;
   String subTotal;
   String price;
+  String emptyCart;
+  String emptyFavorite;
+  String updateAddress;
+  String addressName;
+  String addressNameError;
+  String addressCity;
+  String addressErrorCity;
+  String addressRegion;
+  String addressErrorRegion;
+  String addressDetails;
+  String addressErrorDetails;
+  String addressNotes;
+  String addressErrorNotes;
+  String update;
 
   AppLanguageModel({
-    this.title1,
+    this.title,
+    this.subtitle1,
+    this.subtitle2,
     this.title2,
+    this.subtitle12,
+    this.subtitle22,
     this.title3,
-    this.body1,
-    this.body2,
-    this.body3,
+    this.subtitle13,
+    this.subtitle23,
+    this.title4,
+    this.subtitle14,
+    this.subtitle24,
+    this.skip,
+    this.welcome,
+    this.signInTitle,
+    this.userName,
+    this.userNameError,
+    this.passError,
+    this.emailError,
+    this.member,
+    this.phone,
+    this.phoneError,
+    this.signIn,
+    this.newAccount,
+    this.signUp,
     this.loginTitle,
     this.loginSubTitle,
     this.email,
@@ -133,16 +183,48 @@ class AppLanguageModel
     this.subTotal,
     this.vat,
     this.price,
+    this.emptyCart,
+    this.emptyFavorite,
+    this.updateAddress,
+    this.addressName,
+    this.addressNameError,
+    this.addressCity,
+    this.addressErrorCity,
+    this.addressDetails,
+    this.addressErrorDetails,
+    this.addressRegion,
+    this.addressErrorRegion,
+    this.addressNotes,
+    this.addressErrorNotes,
+    this.update
   });
 
-  AppLanguageModel.fromJson(Map<String, dynamic> json)
-  {
-    title1 = json['title1'];
+  AppLanguageModel.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    subtitle1 = json['subtitle1'];
+    subtitle2 = json['subtitle2'];
     title2 = json['title2'];
+    subtitle12 = json['subtitle12'];
+    subtitle22 = json['subtitle22'];
     title3 = json['title3'];
-    body1 = json['body1'];
-    body2 = json['body2'];
-    body3 = json['body3'];
+    subtitle13 = json['subtitle13'];
+    subtitle23 = json['subtitle23'];
+    title4 = json['title4'];
+    subtitle14 = json['subtitle14'];
+    subtitle24 = json['subtitle24'];
+    skip = json['skip'];
+    welcome = json['welcome'];
+    signInTitle = json['signInTitle'];
+    userName = json['userName'];
+    userNameError = json['userNameError'];
+    passError = json['passError'];
+    emailError = json['emailError'];
+    member = json['member'];
+    phone = json['phone'];
+    phoneError = json['phoneError'];
+    signIn = json['signIn'];
+    newAccount = json['newAccount'];
+    signUp = json['signUp'];
     loginTitle = json['loginTitle'];
     loginSubTitle = json['loginSubTitle'];
     email = json['email'];
@@ -202,9 +284,23 @@ class AppLanguageModel
     disc = json['disc'];
     orderDetails = json['orderDetails'];
     price = json['price'];
+    emptyCart = json['emptyCart'];
+    emptyFavorite = json['emptyFavorite'];
+    updateAddress = json['updateAddress'];
+    addressName = json['addressName'];
+    addressNameError = json['addressNameError'];
+    addressCity = json['addressCity'];
+    addressErrorCity = json['addressErrorCُity'];
+    addressRegion = json['addressRegion'];
+    addressErrorRegion = json['addressErrorRegion'];
+    addressDetails = json['addressDetails'];
+    addressErrorDetails = json['addressErrorDetails'];
+    addressNotes = json['addressNotes'];
+    addressErrorNotes = json['addressErrorNotes'];
+    update = json['update'];
   }
 
-  /*Map<String, dynamic> toJson() {
+/*Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title1'] = this.title1;
     data['title2'] = this.title2;

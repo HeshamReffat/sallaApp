@@ -4,6 +4,7 @@ import 'package:salla/modules/login/cubit/cubit.dart';
 import 'package:salla/modules/new_address/bloc/cubit.dart';
 import 'package:salla/modules/orders/bloc/cubit.dart';
 import 'package:salla/modules/settings/cubit/cubit.dart';
+import 'package:salla/modules/sign_up/bloc/cubit.dart';
 import 'package:salla/modules/single_category/cubit/cubit.dart';
 import 'package:salla/modules/single_product/bloc/cubit.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
@@ -17,21 +18,21 @@ GetIt di = GetIt.I..allowReassignment = true;
 Future init() async {
   final sp = await SharedPreferences.getInstance();
 
-  di.registerLazySingleton<SharedPreferences>(
+  di.registerFactory<SharedPreferences>(
     () => sp,
   );
 
-  di.registerLazySingleton<CacheHelper>(
+  di.registerFactory<CacheHelper>(
     () => CacheImplementation(
       di<SharedPreferences>(),
     ),
   );
 
-  di.registerLazySingleton<DioHelper>(
+  di.registerFactory<DioHelper>(
     () => DioImplementation(),
   );
 
-  di.registerLazySingleton<Repository>(
+  di.registerFactory<Repository>(
     () => RepoImplementation(
       dioHelper: di<DioHelper>(),
       cacheHelper: di<CacheHelper>(),
@@ -70,13 +71,18 @@ Future init() async {
       di<Repository>(),
     ),
   );
-  di.registerLazySingleton<NewAddressCubit>(
+  di.registerFactory<NewAddressCubit>(
     () => NewAddressCubit(
       repository: di<Repository>(),
     ),
   );
-  di.registerLazySingleton<MyOrdersCubit>(
+  di.registerFactory<MyOrdersCubit>(
     () => MyOrdersCubit(
+      repository: di<Repository>(),
+    ),
+  );
+  di.registerFactory<SignUpCubit>(
+    () => SignUpCubit(
       repository: di<Repository>(),
     ),
   );

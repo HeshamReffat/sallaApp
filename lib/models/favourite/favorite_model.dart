@@ -29,10 +29,10 @@ class Info {
   int from;
   int lastPage;
   String lastPageUrl;
-  Null nextPageUrl;
+  dynamic nextPageUrl;
   String path;
   int perPage;
-  Null prevPageUrl;
+  dynamic prevPageUrl;
   int to;
   int total;
 

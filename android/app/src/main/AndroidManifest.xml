@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.salla.salla">
-   <application
+
+
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
         android:label="salla"
         android:icon="@mipmap/ic_launcher">
         <activity

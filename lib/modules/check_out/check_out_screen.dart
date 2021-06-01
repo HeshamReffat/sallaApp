@@ -211,7 +211,7 @@ class CheckOutScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
                                 onPressed: () {
-                                  if (cubit.addressLength != null) {
+                                  if (cubit.addressLength >0) {
                                     cubit
                                         .checkOut(
                                             promo: promoCon.text,

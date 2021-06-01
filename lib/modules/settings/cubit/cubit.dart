@@ -19,6 +19,7 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
   bool editName = true;
   bool editEmail = true;
   bool editPhone = true;
+  bool update = false;
   Data userData;
   File _image;
   final picker = ImagePicker();
@@ -44,16 +45,19 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
 
   newName() {
     editName = !editName;
+    update =!update;
     emit(EditNameProfileState());
   }
 
   newEmail() {
     editEmail = !editEmail;
+    update =!update;
     emit(EditEmailProfileState());
   }
 
   newPhone() {
     editPhone = !editPhone;
+    update =!update;
     emit(EditPhoneProfileState());
   }
 
@@ -69,7 +73,7 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
   updateProfile(name, email, phone, context) {
     emit(LoadingProfileState());
     repository
-        .updateProfile(token: userToken, name: name, email: email, phone: phone,image: photoBase64)
+        .updateProfile(token: userToken, name: name, email: email, phone: phone,)
         .then((value) {
       getUserProfile();
       print('donee');
@@ -97,14 +101,13 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
     }
   }
 
-  updateImage() {
+  updateImage({name, email, phone}) {
     emit(UploadImageLoadingState());
     repository
-        .updateProfileImage(token: userToken, image: photoBase64)
+        .updateProfileImage(token: userToken, image: photoBase64,name: name,email: email,phone: phone)
         .then((value) {
-
-      getUserProfile();
       print('ImageuploadedSuccess');
+      getUserProfile();
       print(value.toString());
       emit(UploadImageSuccessState());
     }).catchError((error) {

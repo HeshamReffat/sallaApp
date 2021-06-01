@@ -59,4 +59,34 @@ class NewAddressCubit extends Cubit<NewAddressStates> {
       emit(NewAddressStateError(error));
     });
   }
+Future updateAddress({
+  addressId,
+  String name,
+  String city,
+  String region,
+  String details,
+  double latitude,
+  double longitude,
+  String notes,
+}) async{
+  emit(UpdateAddressStateLoading());
+  repository
+      .updateAddress(
+    addressId: addressId,
+      token: userToken,
+      name: name,
+      city: city,
+      details: details,
+      latitude: 30.061686300000001637044988456182181835174560546875,
+      longitude: 31.326008800000000320551407639868557453155517578125,
+      notes: notes,
+      region: region)
+      .then((value) {
+        print(value.data);
+    emit(UpdateAddressStateSuccess());
+  }).catchError((error) {
+    print(error.toString());
+    emit(UpdateAddressStateError());
+  });
+}
 }

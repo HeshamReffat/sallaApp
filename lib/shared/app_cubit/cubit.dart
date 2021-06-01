@@ -42,8 +42,10 @@ class AppCubit extends Cubit<AppStates> {
     for (int i = 0; i < selectedLanguage.length; i++) {
       if (i == index) {
         selectedLanguage[i] = true;
+        emit(AppSelectLanguageState());
       } else {
         selectedLanguage[i] = false;
+        emit(AppSelectLanguageState());
       }
     }
 
@@ -121,7 +123,7 @@ SearchModel searchModel;
         emit(AppAddressErrorState());
       });
   }
-  var promoCodeId;
+  var promoCodeId = 0;
   Future checkPromoCode(promo)async{
     repository.promoCodeValidate(token: userToken,promoCode:promo).then((value) {
       promoCodeId = value.data['data']['id'];

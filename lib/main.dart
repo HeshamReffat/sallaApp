@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:salla/modules/login/login_screen.dart';
 import 'package:salla/modules/select_language/select_language_screen.dart';
 import 'package:salla/modules/settings/cubit/cubit.dart';
@@ -79,6 +80,7 @@ class MyApp extends StatelessWidget {
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
+          FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             darkTheme: AppCubit.get(context).isDark

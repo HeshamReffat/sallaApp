@@ -27,6 +27,7 @@ class LoginCubit extends Cubit<LoginStates>
     @required String password,
   })
   {
+    emit(LoginLoadingState());
     repository
         .userLogin(
       email: email,

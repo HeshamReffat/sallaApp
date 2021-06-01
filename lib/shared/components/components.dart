@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salla/models/address/address_model.dart';
+import 'package:salla/models/board/board_model.dart';
 import 'package:salla/models/order_details/order_details_model.dart';
 import 'package:salla/models/orders/orders_model.dart';
 import 'package:salla/modules/check_out_details/check_out_details.dart';
+import 'package:salla/modules/new_address/update_address_screen.dart';
 import 'package:salla/modules/order_details/orders_details_screen.dart';
 import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/components/constants.dart';
@@ -52,7 +54,7 @@ Widget languageItem(
                 model.language,
               ),
             ),
-            if (AppCubit.get(context).selectedLanguage[index] == true)
+            if (AppCubit.get(context).selectedLanguage[index])
               Icon(
                 IconBroken.Arrow___Right_Circle,
               ),
@@ -188,8 +190,8 @@ Widget ordersItem({
                     child: TextButton(
                         onPressed: () {
                           navigateTo(
-                               context,
-                               OrdersDetailsScreen(
+                              context,
+                              OrdersDetailsScreen(
                                 id: data.id,
                               ));
                         },
@@ -263,15 +265,109 @@ Widget orderDetailsItem({context, OrderProducts order}) => Card(
       ),
     );
 
+Widget boardingItem({@required BoardModel model, index, context}) => Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Image(image: AssetImage('${model.image}')),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: model.title,
+              style: TextStyle(
+                  color: defaultColor.withOpacity(0.50), fontSize: 25),
+              children: <TextSpan>[
+                TextSpan(
+                    text: '\n${model.subTitle1}',
+                    style: TextStyle(
+                        color: index != 2 || appLanguage == 'ar'
+                            ? defaultColor.withOpacity(0.50)
+                            : defaultColor,
+                        fontWeight:
+                            index == 2 ? FontWeight.bold : FontWeight.normal)),
+                TextSpan(
+                    text: '  ${model.subTitle2}',
+                    style: TextStyle(
+                        color: index != 2 || appLanguage == 'ar'
+                            ? defaultColor
+                            : defaultColor.withOpacity(0.50),
+                        fontWeight: index != 2 || appLanguage == 'ar'
+                            ? FontWeight.bold
+                            : FontWeight.normal)),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+Widget logo({TextStyle textStyle, iconColor = Colors.white, context}) {
+  return Directionality(
+    textDirection: AppCubit.get(context).appDirection,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.shopping_bag_outlined,
+          color: iconColor,
+          size: 50,
+        ),
+        Text(
+          appLang(context).salla,
+          style: textStyle ?? white20bold(),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget defaultTextFormField(
+        {@required hint,
+        @required error,
+        @required controller,
+        @required context,
+        bool isPass = false,
+        showPassFunction,
+        IconData icon}) =>
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: TextFormField(
+        cursorHeight: 25,
+        cursorColor: btnColor,
+        validator: (value) {
+          if (value.isEmpty) return error;
+          return null;
+        },
+        controller: controller,
+        obscureText: isPass,
+        decoration: InputDecoration(
+          suffixIcon: icon != null
+              ? Directionality(
+                  textDirection: AppCubit.get(context).appDirection,
+                  child: InkWell(onTap: showPassFunction, child: Icon(icon)))
+              : null,
+          hintText: hint,
+          hintStyle: grey14(),
+          isDense: true,
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: btnColor.withOpacity(0.50))),
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: btnColor.withOpacity(0.50))),
+        ),
+      ),
+    );
+
 Widget defaultButton({
   @required Function function,
   @required String text,
+  Color color = defaultColor
 }) =>
     Container(
       height: 40.0,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: defaultColor,
+        color: color,
         borderRadius: BorderRadius.circular(
           3.0,
         ),
@@ -403,7 +499,19 @@ Widget addressBuilder({
                             Icons.edit,
                             color: Colors.green,
                           ),
-                          onPressed: () {}),
+                          onPressed: () {
+                            navigateTo(
+                              context,
+                              UpdateAddress(
+                                id: address.id,
+                                name: address.name,
+                                city: address.city,
+                                region: address.region,
+                                details: address.details,
+                                notes: address.notes,
+                              ),
+                            );
+                          }),
                       IconButton(
                           icon: Icon(
                             Icons.delete_forever,

@@ -35,7 +35,15 @@ class FavoriteScreen extends StatelessWidget {
               builder: (context) {
                 if (cubit.responseData.data.isEmpty) {
                   return Center(
-                    child: Text('Your Favorite is Empty'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: AssetImage('assets/images/emptyfav.png'),
+                        ),
+                        Text(appLang(context).emptyFavorite),
+                      ],
+                    ),
                   );
                 } else {
                   return ListView.separated(
