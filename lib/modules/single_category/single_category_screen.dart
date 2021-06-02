@@ -15,8 +15,7 @@ import 'package:salla/shared/styles/colors.dart';
 import 'package:salla/shared/styles/icon_broken.dart';
 import 'package:salla/shared/styles/styles.dart';
 
-class SingleCategoryScreen extends StatelessWidget
-{
+class SingleCategoryScreen extends StatelessWidget {
   final int id;
   final String title;
 
@@ -25,11 +24,11 @@ class SingleCategoryScreen extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => di<SingleCategoryCubit>()..getCategories(id, context),
+      create: (BuildContext context) =>
+          di<SingleCategoryCubit>()..getCategories(id, context),
       child: BlocConsumer<SingleCategoryCubit, SingleCategoryStates>(
         listener: (context, state) {},
-        builder: (context, state)
-        {
+        builder: (context, state) {
           var model = SingleCategoryCubit.get(context).singleCategoryModel;
 
           return Directionality(
@@ -41,22 +40,35 @@ class SingleCategoryScreen extends StatelessWidget
                   title,
                 ),
               ),
-              body: ConditionalBuilder(
+              body:ConditionalBuilder(
                 condition: model != null,
-                builder: (context) => ListView.separated(
+                builder: (context) {
+                  return model.data.data.isEmpty? Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(
+                            image:
+                            AssetImage('assets/images/noproduct.png'),
+                          ),
+                        ]),
+                  ):ListView.separated(
                   physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => singleProductItem(
-                    model: model.data.data[index],
-                    context: context,
-                    index: index,
-                  ),
+                  itemBuilder: (context, index) {
+                      return singleProductItem(
+                        model: model.data.data[index],
+                        context: context,
+                        index: index,
+                      );
+                  },
                   separatorBuilder: (context, index) => Container(
                     width: double.infinity,
                     height: 1.0,
                     color: Colors.grey[300],
                   ),
                   itemCount: model.data.data.length,
-                ),
+                );
+                },
                 fallback: (context) => Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -107,8 +119,7 @@ class SingleCategoryScreen extends StatelessWidget
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                    [
+                    children: [
                       if (model.discount != 0)
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
@@ -145,8 +156,7 @@ class SingleCategoryScreen extends StatelessWidget
                             children: [
                               Expanded(
                                 child: Column(
-                                  children:
-                                  [
+                                  children: [
                                     Row(
                                       children: [
                                         Text(
@@ -175,7 +185,8 @@ class SingleCategoryScreen extends StatelessWidget
                                             '${model.oldPrice.round()}',
                                             style: black12bold().copyWith(
                                               color: Colors.grey,
-                                              decoration: TextDecoration.lineThrough,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
                                             ),
                                           ),
                                           Padding(
@@ -195,24 +206,24 @@ class SingleCategoryScreen extends StatelessWidget
                                             ),
                                           ),
                                         ],
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                       ),
                                   ],
                                 ),
                               ),
                               FloatingActionButton(
-                                onPressed: ()
-                                {
+                                onPressed: () {
                                   AppCubit.get(context).changeFav(
                                     id: model.id,
                                     context: context,
                                   );
                                 },
-                                heroTag : null,
+                                heroTag: null,
                                 backgroundColor:
-                                AppCubit.get(context).favourites[model.id]
-                                    ? Colors.red[400]
-                                    : null,
+                                    AppCubit.get(context).favourites[model.id]
+                                        ? Colors.red[400]
+                                        : null,
                                 mini: true,
                                 child: Icon(
                                   IconBroken.Heart,
@@ -224,10 +235,11 @@ class SingleCategoryScreen extends StatelessWidget
                                     id: model.id,
                                   );
                                 },
-                                heroTag : null,
-                                backgroundColor: AppCubit.get(context).cart[model.id]
-                                    ? Colors.green
-                                    : null,
+                                heroTag: null,
+                                backgroundColor:
+                                    AppCubit.get(context).cart[model.id]
+                                        ? Colors.green
+                                        : null,
                                 mini: true,
                                 child: Icon(
                                   IconBroken.Buy,

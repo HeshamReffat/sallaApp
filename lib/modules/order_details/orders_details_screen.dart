@@ -30,17 +30,17 @@ class OrdersDetailsScreen extends StatelessWidget {
               elevation: 1.0,
               title: Text('${appLang(context).orderDetails}'),
             ),
-            body: Column(
-              children: [
-                if (state is OrderCancelStateLoading)
-                  LinearProgressIndicator(
-                    backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(btnColor),
-                  ),
-                Expanded(
-                  child: ConditionalBuilder(
-                    condition: state is! OrderDetailsStateLoading,
-                    builder: (context) => SingleChildScrollView(
+            body: ConditionalBuilder(
+              condition: state is! OrderDetailsStateLoading,
+              builder: (context) => Column(
+                children: [
+                  if (state is OrderCancelStateLoading)
+                    LinearProgressIndicator(
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(btnColor),
+                    ),
+                  Expanded(
+                    child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
@@ -187,34 +187,33 @@ class OrdersDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    fallback: (context) => Center(
-                      child: CircularProgressIndicator(),
-                    ),
                   ),
-                ),
-                // if (cubit.orderDetailsModel.data.status.toString() != 'ملغي' ||
-                //     cubit.orderDetailsModel.data.status.toString() !=
-                //         'Cancelled')
-                  Container(
-                    width: double.infinity,
-                    color: Colors.red,
-                    child: MaterialButton(
-                      child: Text(
-                        '${appLang(context).cancelOrder}',
-                        style: white14bold(),
+                  if (cubit.orderDetailsModel.data.status.toString() !=
+                          "Cancelled" &&
+                      cubit.orderDetailsModel.data.status.toString() != "ملغي")
+                    Container(
+                      width: double.infinity,
+                      color: Colors.red,
+                      child: MaterialButton(
+                        child: Text(
+                          '${appLang(context).cancelOrder}',
+                          style: white14bold(),
+                        ),
+                        onPressed: () {
+                          cubit
+                              .cancelOrder(
+                            orderId: this.id,
+                          ).then((value) {
+                            Navigator.pop(context);
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        cubit
-                            .cancelOrder(
-                          orderId: this.id,
-                        )
-                            .then((value) {
-                          Navigator.pop(context);
-                        });
-                      },
                     ),
-                  ),
-              ],
+                ],
+              ),
+              fallback: (context) => Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
           );
         },

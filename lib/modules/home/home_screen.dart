@@ -158,9 +158,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: 25.0,
-                color: Colors.black.withOpacity(
-                  .8,
-                ),
+                color: Colors.black,
                 child: Center(
                   child: Text(
                     model.name,
