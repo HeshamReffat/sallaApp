@@ -6,6 +6,8 @@ import 'package:salla/models/user/user_model.dart';
 import 'package:salla/modules/sign_up/bloc/states.dart';
 import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
+import 'package:salla/shared/di/di.dart';
+import 'package:salla/shared/network/local/cache_helper.dart';
 import 'package:salla/shared/network/repository.dart';
 
 class SignUpCubit extends Cubit<SignUpStates> {
@@ -35,8 +37,15 @@ class SignUpCubit extends Cubit<SignUpStates> {
     ).then((value) {
       userInfoModel = UserModel.fromJson(value.data);
       if(userInfoModel.status){
-        setUserInfo(jsonEncode(userInfoModel.data));
-        emit(SignUpSuccessState(userInfoModel));
+
+        di<CacheHelper>()
+            .put('userToken', userInfoModel.data.token);
+
+        setUserInfo(jsonEncode(userInfoModel.data)).then((value) async{
+          userToken = await getUserToken();
+          emit(SignUpSuccessState(userInfoModel));
+        });
+
       }else{
         showToast(text: userInfoModel.message, color: ToastColors.ERROR);
         emit(SignUpErrorState(userInfoModel.message));

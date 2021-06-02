@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salla/layout/home_layout.dart';
 import 'package:salla/models/add_cart/add_cart_model.dart';
 import 'package:salla/models/add_fav/add_fav_model.dart';
@@ -129,7 +130,11 @@ SearchModel searchModel;
       promoCodeId = value.data['data']['id'];
       emit(PromoSuccessState());
       print(promoCodeId);
-    }).catchError((error){});
+    }).catchError((error){
+      print(error.toString());
+      showToast(text: 'code not valid', color: ToastColors.ERROR);
+      emit(PromoErrorState());
+    });
   }
   Future checkOut({addressId, promo}) async{
     emit(CheckOutLoadingState());

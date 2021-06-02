@@ -28,13 +28,13 @@ class SignUpScreen extends StatelessWidget {
         child: BlocConsumer<SignUpCubit, SignUpStates>(
           listener: (context, state) {
             if (state is SignUpSuccessState) {
-              di<CacheHelper>()
-                  .put('userToken', state.userInfoModel.data.token)
-                  .then((value) {
+
+              AppCubit.get(context).getHomeData();
+              AppCubit.get(context).getCategories();
+              AppCubit.get(context).getCart();
+              AppCubit.get(context).getAddress();
+
                 navigateAndFinish(context, HomeLayout());
-              }).catchError((error) {
-                print('error token');
-              });
             }
           },
           builder: (context, state) {

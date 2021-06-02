@@ -91,7 +91,10 @@ class CheckOutScreen extends StatelessWidget {
                                                         .withOpacity(0.50))),
                                           ),
                                           onEditingComplete: (){
-                                            cubit.checkPromoCode(promoCon.text);
+                                            if(promoCon.text.length > 0) {
+                                              cubit.checkPromoCode(
+                                                  promoCon.text);
+                                            }
                                             FocusScope.of(context).unfocus();
                                           },
                                         ),

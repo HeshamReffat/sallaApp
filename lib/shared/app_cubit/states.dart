@@ -71,6 +71,7 @@ class DeleteAddressErrorState extends AppStates{
 }
 class PromoLoadingState extends AppStates{}
 class PromoSuccessState extends AppStates{}
+class PromoErrorState extends AppStates{}
 
 class CheckOutLoadingState extends AppStates{}
 class CheckOutSuccessState extends AppStates{}

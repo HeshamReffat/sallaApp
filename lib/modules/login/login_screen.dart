@@ -32,14 +32,15 @@ class LoginScreen extends StatelessWidget {
           child: BlocConsumer<LoginCubit, LoginStates>(
             listener: (context, state) {
               if (state is LoginSuccessState) {
-                di<CacheHelper>()
-                    .put('userToken', state.userModel.data.token)
-                    .then((value) {
+
+                AppCubit.get(context).getHomeData();
+                AppCubit.get(context).getCategories();
+                AppCubit.get(context).getCart();
+                AppCubit.get(context).getAddress();
                   navigateAndFinish(
                     context,
                     HomeLayout(),
                   );
-                }).catchError((error) {});
               }
 
               if (state is LoginErrorState) {
