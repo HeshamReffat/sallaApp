@@ -361,7 +361,9 @@ Widget defaultTextFormField(
 Widget defaultButton({
   @required Function function,
   @required String text,
-  Color color = defaultColor
+  Color color = defaultColor,
+   icon,
+  iconColor
 }) =>
     Container(
       height: 40.0,
@@ -374,9 +376,19 @@ Widget defaultButton({
       ),
       child: MaterialButton(
         onPressed: function,
-        child: Text(
-          text.toUpperCase(),
-          style: white14bold(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if(icon!=null)
+            Icon(icon,color: iconColor,),
+            if(icon!=null)
+            SizedBox(width: 10.0,),
+            Text(
+              text.toUpperCase(),
+              style: white14bold(),
+            ),
+          ],
         ),
       ),
     );

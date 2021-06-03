@@ -21,23 +21,23 @@ class AddNewAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di<NewAddressCubit>()..getGeoLocation(),
+      create: (context) => di<NewAddressCubit>(),
       child: BlocConsumer<NewAddressCubit, NewAddressStates>(
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = NewAddressCubit.get(context);
           return Directionality(
             textDirection: AppCubit.get(context).appDirection,
-            child: state is NewAddressStateLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Scaffold(
+            child: Scaffold(
                     appBar: AppBar(
                       title: Text(appLang(context).newAddress),
                       elevation: 1.0,
                     ),
-                    body: Form(
+                    body:  state is NewAddressStateLoading || state is GeoLocationStateLoading
+                        ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                        :Form(
                       key: formKey,
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -66,7 +66,18 @@ class AddNewAddress extends StatelessWidget {
                             Spacer(),
                             defaultButton(
                                 function: () {
-                                  if(formKey.currentState.validate()) {
+                                  cubit.getGeoLocation().then((value) {
+                                    nameCon.text=cubit.myAddress.subAdminArea;
+                                    cityCon.text =cubit.myAddress.countryName;
+                                    regionCon.text=cubit.myAddress.featureName;
+                                    detailsCon.text=cubit.myAddress.addressLine;
+                                  });
+                                },
+                                text: appLang(context).getLocation,color: Colors.green,icon: Icons.location_pin,iconColor: Colors.red),
+                            SizedBox(height: 20.0,),
+                            defaultButton(
+                                function: () {
+                                  if (formKey.currentState.validate()) {
                                     if (nameCon.text.isNotEmpty &&
                                         cityCon.text.isNotEmpty &&
                                         regionCon.text.isNotEmpty &&
@@ -120,7 +131,7 @@ class AddNewAddress extends StatelessWidget {
             contentPadding: EdgeInsets.all(9),
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintStyle: grey14(),
+            //hintStyle: grey14(),
             isDense: true,
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),

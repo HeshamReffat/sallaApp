@@ -10,9 +10,9 @@ import 'package:salla/shared/styles/styles.dart';
 
 class CheckOutScreen extends StatelessWidget {
   var promoCon = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    AppCubit.get(context).getAddress();
     return Directionality(
       textDirection: AppCubit.get(context).appDirection,
       child: BlocConsumer<AppCubit, AppStates>(
@@ -51,7 +51,7 @@ class CheckOutScreen extends StatelessWidget {
                                     Spacer(),
                                     Text(
                                       '${cubit.cartModel.data.total.round()} ${appLang(context).currency}',
-                                      style: black14bold()
+                                      style: black18bold()
                                           .copyWith(color: Colors.blue),
                                     ),
                                   ],
@@ -66,14 +66,15 @@ class CheckOutScreen extends StatelessWidget {
                                       style: black18bold(),
                                     ),
                                     Spacer(),
-                                    Expanded(
-                                      child: Container(
-                                        height: 40,
-                                        child: TextFormField(
+                                    Container(
+                                      height: 40,
+                                      width: 80,
+                                      child: TextFormField(
                                           cursorColor: btnColor,
                                           controller: promoCon,
                                           textAlignVertical:
                                               TextAlignVertical.center,
+                                          textAlign: TextAlign.center,
                                           cursorHeight: 20,
                                           maxLines: 1,
                                           decoration: InputDecoration(
@@ -90,16 +91,39 @@ class CheckOutScreen extends StatelessWidget {
                                                     color: btnColor
                                                         .withOpacity(0.50))),
                                           ),
-                                          onEditingComplete: (){
-                                            if(promoCon.text.length > 0) {
+                                          onEditingComplete: () {
+                                            FocusScope.of(context).unfocus();
+                                          }),
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      width: 80,
+                                      child: defaultButton(
+                                        color: promoCon.text.length >0 ? Colors.blue : Colors.grey,
+                                          function: promoCon.text.length > 0 ?() {
+                                            if (promoCon.text.length > 0) {
                                               cubit.checkPromoCode(
                                                   promoCon.text);
                                             }
                                             FocusScope.of(context).unfocus();
-                                          },
-                                        ),
-                                      ),
-                                    )
+                                          }:null,
+                                          text: appLang(context).apply),
+                                    ),
+                                  ],
+                                ),
+                                if(cubit.promoCodeModel != null && cubit.promoCodeModel.data != null)
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if(cubit.promoCodeModel != null && cubit.promoCodeModel.data != null)
+                                Row(
+                                  children: [
+                                    Text(appLang(context).discount,style: black18bold(),),
+                                    Spacer(),
+                                    Text('${cubit.promoCodeModel.data.value.toString()} ${appLang(context).currency}',style: black18bold().copyWith(color: Colors.blue),),
                                   ],
                                 ),
                                 SizedBox(
@@ -214,7 +238,7 @@ class CheckOutScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
                                 onPressed: () {
-                                  if (cubit.addressLength >0) {
+                                  if (cubit.addressLength > 0) {
                                     cubit
                                         .checkOut(
                                             promo: promoCon.text,

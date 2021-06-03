@@ -22,22 +22,34 @@ class SettingsScreen extends StatelessWidget {
         return state is LoadingSettingsState
             ? Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-              child: Padding(
+                child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 80,
-                        backgroundImage:
-                            SettingsScreenCubit.get(context).userData != null
-                                ? NetworkImage(
-                                    SettingsScreenCubit.get(context)
-                                        .userData
-                                        .image,
-                                  )
-                                : AssetImage('assets/images/logo.jpg'),
+                      ClipRRect(
+                        child: FadeInImage.assetNetwork(
+                          height: 150,
+                          width: 150,
+                          placeholder: 'assets/images/Loading.gif',
+                          image:
+                              SettingsScreenCubit.get(context).userData.image,
+                          fit: BoxFit.cover,
+                        ),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        borderRadius: BorderRadius.circular(70),
                       ),
+                      // CircleAvatar(
+                      //   radius: 80,
+                      //   backgroundImage:
+                      //       SettingsScreenCubit.get(context).userData != null
+                      //           ? NetworkImage(
+                      //               SettingsScreenCubit.get(context)
+                      //                   .userData
+                      //                   .image,
+                      //             )
+                      //           : AssetImage('assets/images/logo.jpg'),
+                      // ),
                       SizedBox(
                         height: 10,
                       ),
@@ -81,25 +93,31 @@ class SettingsScreen extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               Theme(
-                                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                                data: Theme.of(context)
+                                    .copyWith(dividerColor: Colors.transparent),
                                 child: ExpansionTile(
                                   leading: Icon(Icons.language_outlined),
                                   title: Text(appLang(context).language),
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        setAppLanguageToShared('ar').then((value) {
-                                          getTranslationFile('ar').then((value) {
+                                        setAppLanguageToShared('ar')
+                                            .then((value) {
+                                          getTranslationFile('ar')
+                                              .then((value) {
                                             AppCubit.get(context)
                                                 .setLanguage(
-                                                  translationFile: value,
-                                                  code: 'ar',
-                                                )
+                                              translationFile: value,
+                                              code: 'ar',
+                                            )
                                                 .then((value) {
-                                              AppCubit.get(context).cartProductsNumber = 0;
-                                              AppCubit.get(context).getHomeData();
+                                              AppCubit.get(context)
+                                                  .cartProductsNumber = 0;
+                                              AppCubit.get(context)
+                                                  .getHomeData();
                                               AppCubit.get(context).getCart();
-                                              AppCubit.get(context).getCategories();
+                                              AppCubit.get(context)
+                                                  .getCategories();
                                             });
                                           }).catchError((error) {});
                                         }).catchError((error) {});
@@ -111,18 +129,23 @@ class SettingsScreen extends StatelessWidget {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        setAppLanguageToShared('en').then((value) {
-                                          getTranslationFile('en').then((value) {
+                                        setAppLanguageToShared('en')
+                                            .then((value) {
+                                          getTranslationFile('en')
+                                              .then((value) {
                                             AppCubit.get(context)
                                                 .setLanguage(
-                                                  translationFile: value,
-                                                  code: 'en',
-                                                )
+                                              translationFile: value,
+                                              code: 'en',
+                                            )
                                                 .then((value) {
-                                              AppCubit.get(context).cartProductsNumber = 0;
-                                                  AppCubit.get(context).getHomeData();
-                                                  AppCubit.get(context).getCart();
-                                                  AppCubit.get(context).getCategories();
+                                              AppCubit.get(context)
+                                                  .cartProductsNumber = 0;
+                                              AppCubit.get(context)
+                                                  .getHomeData();
+                                              AppCubit.get(context).getCart();
+                                              AppCubit.get(context)
+                                                  .getCategories();
                                             });
                                           }).catchError((error) {});
                                         }).catchError((error) {});
@@ -133,7 +156,6 @@ class SettingsScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ],
-
                                 ),
                               ),
                               Divider(
@@ -169,8 +191,10 @@ class SettingsScreen extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () {
-                                  SettingsScreenCubit.get(context).userLogout().then(
-                                        (value) {
+                                  SettingsScreenCubit.get(context)
+                                      .userLogout()
+                                      .then(
+                                    (value) {
                                       navigateAndFinish(context, LoginScreen());
                                     },
                                   );
@@ -180,7 +204,6 @@ class SettingsScreen extends StatelessWidget {
                                   title: Text(appLang(context).logout),
                                 ),
                               ),
-
                             ],
                           );
                         },
@@ -188,7 +211,7 @@ class SettingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-            );
+              );
       },
     );
   }

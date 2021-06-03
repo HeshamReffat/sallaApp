@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
               translationFile: translationFile,
               code: code,
             )
+            ..checkConnection()
             ..startAppTheme()
             ..getHomeData()
             ..getCategories()

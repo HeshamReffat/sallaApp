@@ -75,7 +75,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                     if (selectedIndex == null)
                     {
                       showToast(
-                        text: 'please select a language then press done',
+                        text: 'Please select a language then press Next',
                         color: ToastColors.WARNING,
                       );
                     } else
@@ -103,7 +103,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                           .catchError((error) {});
                     }
                   },
-                  text: 'NEXT',
+                  text: appLang(context).next,
                 ),
               ),
             ],

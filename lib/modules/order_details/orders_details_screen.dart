@@ -89,7 +89,7 @@ class OrdersDetailsScreen extends StatelessWidget {
                                         ),
                                         Spacer(),
                                         Text(
-                                          '${cubit.orderDetailsModel.data.discount}%',
+                                          '${cubit.orderDetailsModel.data.discount} ${appLang(context).currency}',
                                           style: grey14(),
                                         )
                                       ],

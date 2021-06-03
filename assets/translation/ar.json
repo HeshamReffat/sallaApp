@@ -88,7 +88,7 @@
   "disc": "الخصم",
   "orderDetails": "تفاصيل الطلب",
   "price": "السعر",
-  "emptyCart": "العريه فارغه",
+  "emptyCart": "العربه فارغه",
   "emptyFavorite": "المفضله فارغه",
   "updateAddress": "تحديث العنوان",
   "addressName": "اسم العنوان",
@@ -101,5 +101,8 @@
   "addressErrorDetails": "خطأ برجاء اداخل البيانات",
   "addressNotes": "الملاحظات",
   "addressErrorNotes": "خطأ برجاء اداخل الملاحظات",
-  "update": "تحديث"
+  "update": "تحديث",
+  "apply": "تطبيق",
+  "next": "التالى",
+  "getLocation": "العثور على عنوانى"
 }

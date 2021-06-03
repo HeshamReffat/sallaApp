@@ -97,6 +97,9 @@ class AppLanguageModel {
   String addressNotes;
   String addressErrorNotes;
   String update;
+  String apply;
+  String next;
+  String getLocation;
 
   AppLanguageModel({
     this.title,
@@ -196,7 +199,10 @@ class AppLanguageModel {
     this.addressErrorRegion,
     this.addressNotes,
     this.addressErrorNotes,
-    this.update
+    this.update,
+    this.apply,
+    this.next,
+    this.getLocation,
   });
 
   AppLanguageModel.fromJson(Map<String, dynamic> json) {
@@ -298,6 +304,9 @@ class AppLanguageModel {
     addressNotes = json['addressNotes'];
     addressErrorNotes = json['addressErrorNotes'];
     update = json['update'];
+    apply = json['apply'];
+    next = json['next'];
+    getLocation = json['getLocation'];
   }
 
 /*Map<String, dynamic> toJson() {

@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:salla/models/categories/categories.dart';
 import 'package:salla/models/home/home_model.dart';
 import 'package:salla/modules/single_category/single_category_screen.dart';
@@ -26,109 +27,115 @@ class HomeScreen extends StatelessWidget {
         var model = AppCubit.get(context).homeModel;
         var categories = AppCubit.get(context).categoriesModel;
 
-        return ConditionalBuilder(
-          condition: model != null && categories != null,
-          builder: (context) => SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 200,
-                    viewportFraction: 1.0,
-                    enlargeCenterPage: false,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    reverse: false,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(seconds: 1),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    //onPageChanged: callbackFunction,
-                    scrollDirection: Axis.horizontal,
+        return SmartRefresher(
+          header: WaterDropMaterialHeader(),
+          enablePullDown: true,
+          controller: AppCubit.get(context).refreshController,
+          onRefresh: AppCubit.get(context).onRefresh,
+          child: ConditionalBuilder(
+            condition: model != null && categories != null,
+            builder: (context) => SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: 200,
+                      viewportFraction: 1.0,
+                      enlargeCenterPage: false,
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      reverse: false,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 3),
+                      autoPlayAnimationDuration: Duration(seconds: 1),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      //onPageChanged: callbackFunction,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                    items: model.data.banners
+                        .map(
+                          (item) => Image(
+                            image: NetworkImage(item.image),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        )
+                        .toList(),
                   ),
-                  items: model.data.banners
-                      .map(
-                        (item) => Image(
-                          image: NetworkImage(item.image),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          appLang(context).browse,
+                          style: black20bold(),
                         ),
-                      )
-                      .toList(),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        appLang(context).browse,
-                        style: black20bold(),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 110,
-                  padding: EdgeInsets.all(
-                    10.0,
-                  ),
-                  child: ListView.separated(
-                    itemBuilder: (context, index) =>
-                        categoryItem(categories.data.data[index], context),
-                    separatorBuilder: (context, index) => SizedBox(
-                      width: 10.0,
+                      ],
                     ),
-                    itemCount: categories.data.data.length,
-                    scrollDirection: Axis.horizontal,
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: 10.0,
+                  Container(
+                    height: 110,
+                    padding: EdgeInsets.all(
+                      10.0,
+                    ),
+                    child: ListView.separated(
+                      itemBuilder: (context, index) =>
+                          categoryItem(categories.data.data[index], context),
+                      separatorBuilder: (context, index) => SizedBox(
+                        width: 10.0,
+                      ),
+                      itemCount: categories.data.data.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
                   ),
-                  child: Text(
-                    appLang(context).new_arrivals,
-                    style: black20bold(),
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      start: 10.0,
+                    ),
+                    child: Text(
+                      appLang(context).new_arrivals,
+                      style: black20bold(),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 1.0,
-                  color: Colors.grey[300],
-                ),
-                Container(
-                  color: Colors.grey[300],
-                  child: GridView.count(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 1.0,
-                    mainAxisSpacing: 1.0,
-                    childAspectRatio: 1 / 1.8,
-                    children: List.generate(
-                      model.data.products.length,
-                      (index) => productGridItem(
-                        model: model.data.products[index],
-                        context: context,
-                        index: index,
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 1.0,
+                    color: Colors.grey[300],
+                  ),
+                  Container(
+                    color: Colors.grey[300],
+                    child: GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 1.0,
+                      mainAxisSpacing: 1.0,
+                      childAspectRatio: 1 / 1.8,
+                      children: List.generate(
+                        model.data.products.length,
+                        (index) => productGridItem(
+                          model: model.data.products[index],
+                          context: context,
+                          index: index,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          fallback: (context) => Center(
-            child: CircularProgressIndicator(),
+            fallback: (context) => Center(
+              child: CircularProgressIndicator(),
+            ),
           ),
         );
       },

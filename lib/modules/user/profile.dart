@@ -37,28 +37,36 @@ class UserProfile extends StatelessWidget {
                             : Stack(
                                 alignment: AlignmentDirectional.bottomStart,
                                 children: [
-                                  Container(
-                                    height: 200,
-                                    width: 250,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.green),
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              cubit.userData.image),
-                                          fit: BoxFit.cover),
+                                  ClipRect(
+                                    child: Container(
+                                      height: 200,
+                                      width: 250,
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.green),
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                cubit.userData.image),
+                                            fit: BoxFit.cover),
+                                      ),
+                                      child: ClipRRect(
+                                        child: FadeInImage.assetNetwork(
+                                          placeholder:
+                                              'assets/images/Loading.gif',
+                                          image: cubit.userData.image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                        //borderRadius: BorderRadius.circular(70),
+                                      ),
                                     ),
                                   ),
                                   IconButton(
                                       icon: Icon(Icons.camera),
                                       onPressed: () {
-                                        cubit.getImage().then((value) {
-                                          cubit.updateImage(
-                                            name: cubit.userData.name,
-                                            email: cubit.userData.email,
-                                            phone: cubit.userData.phone,
-                                          );
-                                        });
+                                        cubit
+                                            .chooseImageFrom(context);
                                       }),
                                 ],
                               ),
@@ -182,21 +190,24 @@ class UserProfile extends StatelessWidget {
                         ),
                         Spacer(),
                         defaultButton(
-                          color: cubit.update == false ?Colors.grey:Colors.blue,
-                          function: cubit.update == false? null:() {
-                            if (emailCon.text.isNotEmpty &&
-                                nameCon.text.isNotEmpty &&
-                                phoneCon.text.isNotEmpty) {
-                              cubit.updateProfile(nameCon.text, emailCon.text,
-                                  phoneCon.text, context);
-                              cubit.editName = true;
-                              cubit.editEmail = true;
-                              cubit.editPhone = true;
-                              cubit.update = false;
-                            } else {
-                              print('complete data');
-                            }
-                          },
+                          color:
+                              cubit.update == false ? Colors.grey : Colors.blue,
+                          function: cubit.update == false
+                              ? null
+                              : () {
+                                  if (emailCon.text.isNotEmpty &&
+                                      nameCon.text.isNotEmpty &&
+                                      phoneCon.text.isNotEmpty) {
+                                    cubit.updateProfile(nameCon.text,
+                                        emailCon.text, phoneCon.text, context);
+                                    cubit.editName = true;
+                                    cubit.editEmail = true;
+                                    cubit.editPhone = true;
+                                    cubit.update = false;
+                                  } else {
+                                    print('complete data');
+                                  }
+                                },
                           text: appLang(context).update,
                         ),
                       ],

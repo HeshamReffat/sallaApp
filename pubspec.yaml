@@ -41,26 +41,29 @@ dependencies:
   image_picker: ^0.7.5+2
   geolocator: ^7.0.3
   flutter_statusbarcolor: ^0.2.3
+  connectivity: ^3.0.6
+  pull_to_refresh: ^2.0.0
+  geocoder: ^0.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.8.0
-  flutter_native_splash: ^0.1.9
-  flutter_launcher_name: ^0.0.1
+ # flutter_launcher_icons: ^0.8.0
+  flutter_native_splash: ^1.1.8+4
+  #flutter_launcher_name: ^0.0.1
 
 
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/logo.jpg"
+#flutter_icons:
+#  android: true
+#  ios: true
+#  image_path: "assets/images/logo.jpg"
 
 flutter_native_splash:
   image: assets/images/splash.png
   color: "ffffff"
 
-flutter_launcher_name:
-  name: "Salla"
+#flutter_launcher_name:
+#  name: "Salla"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

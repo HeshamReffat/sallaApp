@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:salla/layout/home_layout.dart';
 import 'package:salla/models/add_cart/add_cart_model.dart';
 import 'package:salla/models/add_fav/add_fav_model.dart';
@@ -11,6 +13,7 @@ import 'package:salla/models/address/address_model.dart';
 import 'package:salla/models/cart/cart.dart';
 import 'package:salla/models/categories/categories.dart';
 import 'package:salla/models/home/home_model.dart';
+import 'package:salla/models/promo_code/promo_code_model.dart';
 import 'package:salla/models/search/search_model.dart';
 import 'package:salla/modules/cart/cart_screen.dart';
 import 'package:salla/modules/categories/categories_screen.dart';
@@ -75,6 +78,25 @@ class AppCubit extends Cubit<AppStates> {
     SettingsScreen(),
   ];
 
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
+
+  void onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1500));
+    cartProductsNumber = 0;
+    getHomeData();
+    getCategories();
+    getCart();
+    refreshController.refreshCompleted();
+  }
+
+  ConnectivityResult connectivityResult;
+
+  checkConnection() async {
+    connectivityResult = await Connectivity().checkConnectivity();
+  }
+
   int currentIndex = 0;
 
   void changeBottomIndex(int index) {
@@ -86,8 +108,9 @@ class AppCubit extends Cubit<AppStates> {
   Map<int, bool> favourites = {};
   Map<int, bool> cart = {};
   int cartProductsNumber = 0;
-SearchModel searchModel;
-  Future<void> searchProduct(productName,context)async {
+  SearchModel searchModel;
+
+  Future<void> searchProduct(productName, context) async {
     emit(AppSearchLoadingState());
     repository.searchProduct(token: userToken, productName: productName).then(
       (value) {
@@ -99,6 +122,7 @@ SearchModel searchModel;
       print(error.toString());
     });
   }
+
   int selectedAdd = 0;
   int addressLength;
 
@@ -111,9 +135,10 @@ SearchModel searchModel;
     currentIndex = index;
     emit(ChangeIndex());
   }
-  Future getAddress() async{
+
+  Future getAddress() async {
     //  emit(HomeLoadingState()w);
-    if(userToken!=null && userToken !='')
+    if (userToken != null && userToken != '')
       repository.getAddresses(token: userToken).then((value) {
         addressModel = AddressModel.fromJson(value.data);
         // print(addressModel.data.data[0].name);
@@ -124,27 +149,35 @@ SearchModel searchModel;
         emit(AppAddressErrorState());
       });
   }
+
   var promoCodeId = 0;
-  Future checkPromoCode(promo)async{
-    repository.promoCodeValidate(token: userToken,promoCode:promo).then((value) {
-      promoCodeId = value.data['data']['id'];
+  PromoCodeModel promoCodeModel;
+
+  Future checkPromoCode(promo) async {
+    repository
+        .promoCodeValidate(token: userToken, promoCode: promo)
+        .then((value) {
+      promoCodeModel = PromoCodeModel.fromJson(value.data);
+      promoCodeId = promoCodeModel.data.id;
+      showToast(text: 'applied Success', color: ToastColors.SUCCESS);
       emit(PromoSuccessState());
       print(promoCodeId);
-    }).catchError((error){
+    }).catchError((error) {
       print(error.toString());
       showToast(text: 'code not valid', color: ToastColors.ERROR);
       emit(PromoErrorState());
     });
   }
-  Future checkOut({addressId, promo}) async{
+
+  Future checkOut({addressId, promo}) async {
     emit(CheckOutLoadingState());
     return await repository
         .confirmOrder(
-        token: userToken,
-        addressId: addressId,
-        payMethod: 1,
-        points: false,
-        promo: promoCodeId.toString())
+            token: userToken,
+            addressId: addressId,
+            payMethod: 1,
+            points: false,
+            promo: promoCodeId.toString())
         .then((value) {
       //
       if (value.data['status'] == true) {
@@ -166,6 +199,7 @@ SearchModel searchModel;
       emit(CheckOutErrorState(error));
     });
   }
+
   void deleteAdd({id}) {
     emit(AddressLoadingState());
     repository.deleteAddress(token: userToken, id: id).then((value) {
@@ -177,76 +211,78 @@ SearchModel searchModel;
       emit(DeleteAddressErrorState(error));
     });
   }
-  void continueShopping(context){
+
+  void continueShopping(context) {
     changeIndex(0);
-    navigateAndFinish(context,HomeLayout());
+    navigateAndFinish(context, HomeLayout());
     emit(BackHomeState());
   }
+
   getHomeData() {
     emit(AppLoadingState());
+    if (userToken != null) {
+      repository
+          .getHomeData(
+        token: userToken,
+      )
+          .then((value) {
+        homeModel = HomeModel.fromJson(value.data);
+        homeModel.data.products.forEach((element) {
+          favourites.addAll({element.id: element.inFavorites});
+          cart.addAll({element.id: element.inCart});
 
-    repository
-        .getHomeData(
-      token: userToken,
-    )
-        .then((value) {
-      homeModel = HomeModel.fromJson(value.data);
-      homeModel.data.products.forEach((element) {
-        favourites.addAll({element.id: element.inFavorites});
-        cart.addAll({element.id: element.inCart});
+          if (element.inCart) {
+            cartProductsNumber++;
+          }
+        });
+        emit(AppSuccessState(homeModel));
 
-        if (element.inCart) {
-          cartProductsNumber++;
-        }
+        //print(value.data.toString());
+      }).catchError((error) {
+        print(error.toString());
+        emit(AppErrorState(error.toString()));
       });
-
-      emit(AppSuccessState(homeModel));
-
-      print(value.data.toString());
-    }).catchError((error) {
-      print(error.toString());
-      emit(AppErrorState(error.toString()));
-    });
+    }
   }
 
   CategoriesModel categoriesModel;
 
   getCategories() {
-    repository.getCategories().then((value) {
-      categoriesModel = CategoriesModel.fromJson(value.data);
+    if (userToken != null) {
+      repository.getCategories().then((value) {
+        categoriesModel = CategoriesModel.fromJson(value.data);
 
-      emit(AppCategoriesSuccessState());
+        emit(AppCategoriesSuccessState());
 
-      print(value.data.toString());
-    }).catchError((error) {
-      print(error.toString());
-      emit(AppCategoriesErrorState(error.toString()));
-    });
+        //print(value.data.toString());
+      }).catchError((error) {
+        print(error.toString());
+        emit(AppCategoriesErrorState(error.toString()));
+      });
+    }
   }
 
   CartModel cartModel;
 
   getCart() {
     emit(AppUpdateCartLoadingState());
+    if (userToken != null) {
+      repository.getCartData(token: userToken).then((value) {
+        cartModel = CartModel.fromJson(value.data);
 
-    repository.getCartData(token: userToken).then((value) {
-      cartModel = CartModel.fromJson(value.data);
+        emit(AppCartSuccessState());
 
-      emit(AppCartSuccessState());
-
-      print('success cart');
-    }).catchError((error) {
-      print('error cart ${error.toString()}');
-      emit(AppCartErrorState(error.toString()));
-    });
+        //print('success cart');
+      }).catchError((error) {
+        print('error cart ${error.toString()}');
+        emit(AppCartErrorState(error.toString()));
+      });
+    }
   }
 
   AddFavModel addFavModel;
 
-  changeFav({
-    @required int id,
-    @required BuildContext context
-  }) {
+  changeFav({@required int id, @required BuildContext context}) {
     print(id);
 
     favourites[id] = !favourites[id];
@@ -309,13 +345,13 @@ SearchModel searchModel;
 
   bool isDark = false;
 
-  changeAppTheme(value)async {
+  changeAppTheme(value) async {
     isDark = value;
     await setAppTheme(value);
     emit(AppSetAppThemeState());
   }
 
-  startAppTheme()async {
+  startAppTheme() async {
     await getAppTheme().then((value) {
       isDark = value ?? false;
     });

@@ -45,19 +45,19 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
 
   newName() {
     editName = !editName;
-    update =!update;
+    update = !update;
     emit(EditNameProfileState());
   }
 
   newEmail() {
     editEmail = !editEmail;
-    update =!update;
+    update = !update;
     emit(EditEmailProfileState());
   }
 
   newPhone() {
     editPhone = !editPhone;
-    update =!update;
+    update = !update;
     emit(EditPhoneProfileState());
   }
 
@@ -73,7 +73,12 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
   updateProfile(name, email, phone, context) {
     emit(LoadingProfileState());
     repository
-        .updateProfile(token: userToken, name: name, email: email, phone: phone,)
+        .updateProfile(
+      token: userToken,
+      name: name,
+      email: email,
+      phone: phone,
+    )
         .then((value) {
       getUserProfile();
       print('donee');
@@ -85,10 +90,61 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
     });
   }
 
+  Future chooseImageFrom(context) async{
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.image),
+                    TextButton(
+                      onPressed: () async{
+                        Navigator.pop(context);
+                        await getImage(ImageSource.gallery).then((value) {
+                          updateImage(
+                            name: userData.name,
+                            email: userData.email,
+                            phone: userData.phone,
+                          );
+                        });
+                        emit(ChooseImageFromSuccessState());
+                      },
+                      child: Text('Gallery'),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.camera_alt),
+                    TextButton(
+                      onPressed: () async{
+                        Navigator.pop(context);
+                        await getImage(ImageSource.camera).then((value) {
+                          updateImage(
+                            name: userData.name,
+                            email: userData.email,
+                            phone: userData.phone,
+                          );
+                        });
+                        emit(ChooseImageFromSuccessState());
+                      },
+                      child: Text('Camera'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
 
-
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+  Future getImage(source) async {
+    final pickedFile = await picker.getImage(source: source);
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       List<int> imageBytes = _image.readAsBytesSync();
@@ -104,7 +160,12 @@ class SettingsScreenCubit extends Cubit<SettingsScreenStates> {
   updateImage({name, email, phone}) {
     emit(UploadImageLoadingState());
     repository
-        .updateProfileImage(token: userToken, image: photoBase64,name: name,email: email,phone: phone)
+        .updateProfileImage(
+            token: userToken,
+            image: photoBase64,
+            name: name,
+            email: email,
+            phone: phone)
         .then((value) {
       print('ImageuploadedSuccess');
       getUserProfile();

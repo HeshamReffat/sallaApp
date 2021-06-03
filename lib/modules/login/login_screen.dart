@@ -8,7 +8,6 @@ import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/components/components.dart';
 import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/di/di.dart';
-import 'package:salla/shared/network/local/cache_helper.dart';
 import 'package:salla/shared/styles/icon_broken.dart';
 import 'package:salla/shared/styles/styles.dart';
 
@@ -83,6 +82,7 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 TextFormField(
                                   controller: emailController,
+                                  keyboardType: TextInputType.emailAddress,
                                   validator: (value) {
                                     if (value.isEmpty) {
                                       return appLang(context).emailValidation;

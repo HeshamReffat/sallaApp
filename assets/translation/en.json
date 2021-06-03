@@ -73,7 +73,7 @@
   "cash": "Cash",
   "credit": "Credit Card",
   "shippingAddress": "Select Address",
-  "newAddress": "AddNewAddress",
+  "newAddress": "Add New Address",
   "shippingCity": "City",
   "shippingRegion": "Region",
   "shippingAddressDetails": "Details",
@@ -101,5 +101,8 @@
   "addressErrorDetails": "please enter the details",
   "addressNotes": "notes",
   "addressErrorNotes": "please enter the notes",
-  "update": "update"
+  "update": "update",
+  "apply": "apply",
+  "next": "next",
+  "getLocation": "Current Location"
 }
