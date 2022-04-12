@@ -9,8 +9,6 @@ import 'package:salla/shared/app_cubit/cubit.dart';
 import 'package:salla/shared/app_cubit/states.dart';
 import 'package:salla/shared/components/constants.dart';
 import 'package:salla/shared/di/di.dart';
-import 'package:salla/shared/network/remote/dio_helper.dart';
-
 import 'layout/home_layout.dart';
 import 'modules/favorites/cubit/favorite_cubit.dart';
 import 'modules/orders/bloc/cubit.dart';

@@ -10,6 +10,7 @@ import 'package:salla/shared/styles/styles.dart';
 
 class HomeLayout extends StatelessWidget {
   TextEditingController searchCon = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     print(userToken);
@@ -45,10 +46,25 @@ class HomeLayout extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Icon(
-                              IconBroken.Search,
-                              color: Colors.grey,
-                              size: 16.0,
+                            InkWell(
+                              onTap: () {
+                                AppCubit.get(context)
+                                    .searchProduct(searchCon.text, context)
+                                    .then((value) {
+                                  navigateTo(
+                                      context,
+                                      SearchScreen(
+                                        title: searchCon.text,
+                                      ));
+                                  FocusScope.of(context).unfocus();
+                                  searchCon.clear();
+                                });
+                              },
+                              child: Icon(
+                                IconBroken.Search,
+                                color: Colors.grey,
+                                size: 16.0,
+                              ),
                             ),
                             SizedBox(
                               width: 15.0,
@@ -58,10 +74,19 @@ class HomeLayout extends StatelessWidget {
                                 controller: searchCon,
                                 style: TextStyle(color: Colors.black),
                                 keyboardType: TextInputType.text,
-                                decoration: InputDecoration(hintText: appLang(context).search,border: InputBorder.none,hintStyle: TextStyle(color: Colors.black)),
-                                onEditingComplete: (){
-                                  AppCubit.get(context).searchProduct(searchCon.text,context).then((value) {
-                                    navigateTo(context, SearchScreen(title: searchCon.text,));
+                                decoration: InputDecoration(
+                                    hintText: appLang(context).search,
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(color: Colors.black)),
+                                onFieldSubmitted: (s) {
+                                  AppCubit.get(context)
+                                      .searchProduct(searchCon.text, context)
+                                      .then((value) {
+                                    navigateTo(
+                                        context,
+                                        SearchScreen(
+                                          title: searchCon.text,
+                                        ));
                                     FocusScope.of(context).unfocus();
                                     searchCon.clear();
                                   });
